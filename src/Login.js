@@ -3,13 +3,20 @@ import React from "react"
 class Login extends React.Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    stayLoggedIn: false
   }
 
   handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
+    if (e.target.id === "stayLoggedIn"){
+      this.setState({
+        stayLoggedIn: !this.state.stayLoggedIn
+      })
+    } else {
+      this.setState({
+        [e.target.id]: e.target.value
+      })
+    }
   }
 
   handleSubmit = e => {
@@ -29,11 +36,13 @@ class Login extends React.Component {
     .then(json=>{
       console.log(json)
       if(json.logged_in){
-        this.setState({
-          username: "",
-          password: ""
-        })
-        this.props.logIn()
+
+        if (this.state.stayLoggedIn) {
+          localStorage.setItem("username", this.state.username)
+        } else {
+          localStorage.removeItem("username")
+        }
+        this.props.logIn(this.state.username)
       }
     })
   }
@@ -46,6 +55,8 @@ class Login extends React.Component {
           <input type="text" id="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/><br/>
           <label>Password</label>
           <input type="password" id="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/><br/>
+          <label>Keep Me Logged In</label>
+          <input type="checkbox" id="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/>
           <input type="submit" />
         </form>
       </div>
