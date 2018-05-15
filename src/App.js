@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Login from "./Login"
-import Logout from "./Logout"
+import AuthContainer from "./AuthContainer"
 import './App.css';
 
 class App extends Component {
@@ -9,20 +8,25 @@ class App extends Component {
     username: ""
   }
 
-  getLogin = () => {
-    return this.state.loggedIn ? <Logout logout={this.logout} username={this.state.username}/> : <Login logIn={this.logIn}/>
-  }
-
   autoLogin = () => {
-    // fetch("http://localhost:3000/api/v1/sessions")
-    // .then(response=>response.json())
-    // .then(json=>console.log(json))
-    if (localStorage.getItem("username")){
-      this.setState({
-        loggedIn: true,
-        username: localStorage.getItem("username")
+    fetch("http://localhost:3000/api/v1/users",{
+      method: "POST",
+      headers: {
+       'Content-type':'application/json'
+      },
+      body: JSON.stringify({
+        type: "login",
+        username: localStorage.getItem("username"),
+        pd: localStorage.getItem("pd")
       })
-    }
+    })
+    .then(response=>response.json())
+    .then(json=>{
+      console.log(json)
+      if (json.logged_in){
+        this.logIn(localStorage.getItem("username"))
+      }
+    })
   }
 
   logIn = (username) => {
@@ -47,9 +51,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.getLogin()}
+        <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       </div>
     );
+  }
+
+  componentWillUnmount(){
+    localStorage.removeItem("username")
+    localStorage.removeItem("pd")
+    localStorage.removeItem("auto")
   }
 }
 

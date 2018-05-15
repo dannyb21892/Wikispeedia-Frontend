@@ -1,6 +1,6 @@
 import React from "react"
 
-class Login extends React.Component {
+class Signup extends React.Component {
   state = {
     username: "",
     password: "",
@@ -28,7 +28,7 @@ class Login extends React.Component {
        'Content-type':'application/json'
       },
       body: JSON.stringify({
-        type: "login",
+        type: "signup",
         username: this.state.username,
         password: this.state.password
       })
@@ -55,7 +55,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <span>LOG IN:</span>
+        <span>SIGNUP:</span>
         <form onSubmit={this.handleSubmit}>
           <label>Username</label>
           <input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/><br/>
@@ -70,4 +70,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login
+export default Signup
