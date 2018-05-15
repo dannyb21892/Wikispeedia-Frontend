@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
 import AuthContainer from "./AuthContainer"
+import MDE from "./MDE"
 import './App.css';
 
 class App extends Component {
@@ -37,7 +40,7 @@ class App extends Component {
   }
 
   logout = () => {
-    localStorage.removeItem("username")
+    this.clearStorage()
     this.setState({
       loggedIn: false,
       username: ""
@@ -48,18 +51,39 @@ class App extends Component {
     this.autoLogin()
   }
 
+  componentDidMount(){
+    window.addEventListener('beforeunload', this.logout);
+  }
+
+  createRouteComponent = (type) => {
+    switch (type) {
+      case "AuthContainer":
+        return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
+      case "MDE":
+        return <MDE />
+      default:
+        return null
+    }
+  }
+
   render() {
     return (
-      <div className="App">
-        <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
-      </div>
+      <Router>
+        <div className="App">
+          <Route exact path="/" render={()=>this.createRouteComponent("AuthContainer")} />
+          <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
+        </div>
+      </Router>
     );
   }
 
-  componentWillUnmount(){
-    localStorage.removeItem("username")
-    localStorage.removeItem("pd")
-    localStorage.removeItem("auto")
+  clearStorage(){
+    if (localStorage.getItem("auto") !== "true") {
+      localStorage.removeItem("username")
+      localStorage.removeItem("pd")
+      localStorage.removeItem("auto")
+    }
+    window.removeEventListener('beforeunload', this.clearStorage)
   }
 }
 

@@ -55,14 +55,11 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <span>LOG IN:</span>
+        <h3>Log In:</h3>
         <form onSubmit={this.handleSubmit}>
-          <label>Username</label>
-          <input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/><br/>
-          <label>Password</label>
-          <input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/><br/>
-          <label>Keep Me Logged In</label>
-          <input type="checkbox" name="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/>
+          <span>Username: <input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/></span><br/>
+          <span>Password: <input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/></span><br/>
+          <span>Keep Me Logged In <input type="checkbox" name="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/></span><br/>
           <input type="submit" />
         </form>
       </div>
