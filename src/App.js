@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import AuthContainer from "./AuthContainer"
 import MDE from "./MDE"
+import NewGame from "./newGame"
 import './App.css';
 
 class App extends Component {
@@ -40,7 +41,9 @@ class App extends Component {
   }
 
   logout = () => {
-    this.clearStorage()
+    localStorage.removeItem("username")
+    localStorage.removeItem("pd")
+    localStorage.removeItem("auto")
     this.setState({
       loggedIn: false,
       username: ""
@@ -52,7 +55,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    window.addEventListener('beforeunload', this.logout);
+    window.addEventListener('beforeunload', this.clearStorage);
   }
 
   createRouteComponent = (type) => {
@@ -61,6 +64,8 @@ class App extends Component {
         return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       case "MDE":
         return <MDE />
+      case "newGame":
+        return <NewGame />
       default:
         return null
     }
@@ -70,8 +75,9 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Route exact path="/" render={()=>this.createRouteComponent("AuthContainer")} />
+          <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
           <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
+          <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
         </div>
       </Router>
     );
