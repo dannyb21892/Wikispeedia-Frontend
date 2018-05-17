@@ -178,15 +178,17 @@ class NewGame extends React.Component {
           </div>
         )
       case 4:
-        moderators = this.state.moderators.map(moderator=><li key={moderator} id={moderator}>{moderator}</li>)
+        moderators = [...this.state.moderators, localStorage.getItem("username")].map(moderator=><li key={moderator} id={moderator}>{moderator}</li>)
         headings = this.state.headings.map(heading=><li key={heading} id={heading}>{heading}</li>)
+        let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\;':<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
         return (
           <div>
             <h3>Your wiki has been successfully created!</h3>
             <span><strong>Game title: </strong>{this.state.title}</span><br/>
             <span><strong>Released: </strong>{this.state.year}</span><br/>
             <span><strong>Article Headings: </strong><ul>{headings}</ul></span><br/>
-            <span><strong>Moderators: </strong><ul>{moderators}</ul></span>
+            <span><strong>Moderators: </strong><ul>{moderators}</ul></span><br /><br />
+            <span>Your game can be found at the following link: localhost:3001/games/{slug}</span>
           </div>
         )
       default:

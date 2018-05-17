@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import AuthContainer from "./AuthContainer"
 import MDE from "./MDE"
 import NewGame from "./newGame"
+import Game from "./Game"
 import './App.css';
 
 class App extends Component {
@@ -66,6 +67,11 @@ class App extends Component {
         return <MDE />
       case "newGame":
         return <NewGame loggedIn={this.state.loggedIn }/>
+      case "gamesContainer":
+        return "Games container will eventually go here"
+      case "game":
+        let slug = window.location.href.split("/games/")[1]
+        return <Game slug={slug} />
       default:
         return null
     }
@@ -78,6 +84,8 @@ class App extends Component {
           <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
           <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
           <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
+          <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
+          <Route path="/games/" render={()=>this.createRouteComponent("game")} />
         </div>
       </Router>
     );
