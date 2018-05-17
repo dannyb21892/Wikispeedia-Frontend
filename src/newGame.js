@@ -17,7 +17,8 @@ class NewGame extends React.Component {
     })
   }
 
-  addHeading = () => {
+  addHeading = e => {
+    e.preventDefault()
     this.setState({
       headings: [...this.state.headings, this.state.currentHeading]
     })
@@ -30,7 +31,8 @@ class NewGame extends React.Component {
     })
   }
 
-  addMod = () => {
+  addMod = e => {
+    e.preventDefault()
     fetch("http://localhost:3000/api/v1/users",{
       method: "POST",
       headers: {
@@ -38,10 +40,10 @@ class NewGame extends React.Component {
       },
       body: JSON.stringify({
         type: "checkUser",
-        user: this.state.currentModerator
+        username: this.state.currentModerator
       })
     })
-    .then(response=>response.json)
+    .then(response=>response.json())
     .then(json=>{
       console.log(json)
       if(json.userExists) {
@@ -89,12 +91,13 @@ class NewGame extends React.Component {
             console.log("Game already exists in database") //eventually lead user to existing game page
           }
         })
-
+        break;
       case 2:
+        console.log("setting 2 to 3")
         this.setState({
           progress: this.state.progress + 1
         })
-
+        break;
       case 3:
         fetch("http://localhost:3000/api/v1/games",{
           method: "POST",
@@ -106,12 +109,19 @@ class NewGame extends React.Component {
             title: this.state.title,
             year: this.state.year,
             headings: this.state.headings,
-            moderators: this.state.moderators
+            moderators: [...this.state.moderators, localStorage.getItem("username")]
           })
         })
         .then(response=>response.json())
-        .then(json=>console.log(json))
-
+        .then(json=>{
+          console.log(json)
+          if (json.success){
+            this.setState({
+              progress: this.state.progress + 1
+            })
+          }
+        })
+        break;
       default:
     }
   }
@@ -126,6 +136,7 @@ class NewGame extends React.Component {
         let options = years.map(year => <option key={year} value={year}>{year}</option>)
 
         return (<div className="newGameForm">
+          <h3>Set up a new wiki!</h3>
           <h3>Step 1 of 3: Choose a Game</h3>
           <form onSubmit={this.handleSubmit}>
             <p>Game Title: <br/> <input type="text" name="title" value={this.state.title} onChange={this.handleChange} /></p>
@@ -133,11 +144,11 @@ class NewGame extends React.Component {
             <input type="submit" />
           </form>
         </div>)
-
       case 2:
         let headings = this.state.headings.map(heading=><li key={heading} id={heading} onClick={this.remHeading}>{heading}</li>)
         return (
         <div>
+          <h3>Set up a new wiki!</h3>
           <h3>Step 2 of 3: Add Article Headings</h3>
           <p>These will be the highest level groupings of related articles. Some defaults have been provided. Click "+" to add your own, or click a heading tag to remove it.</p>
           <form onSubmit={this.handleSubmit}>
@@ -149,11 +160,11 @@ class NewGame extends React.Component {
             </ul>
           </form>
         </div>)
-
       case 3:
         let moderators = this.state.moderators.map(moderator=><li key={moderator} id={moderator} onClick={this.remMod}>{moderator}</li>)
         return (
           <div>
+            <h3>Set up a new wiki!</h3>
             <h3>Step 3 of 3: Add Moderators</h3>
             <p>Your moderators will be responsible for approving any edits made to the articles in your wiki. You are already a moderator of any wiki you create.</p>
             <form onSubmit={this.handleSubmit}>
@@ -166,18 +177,35 @@ class NewGame extends React.Component {
             </form>
           </div>
         )
-
+      case 4:
+        moderators = this.state.moderators.map(moderator=><li key={moderator} id={moderator}>{moderator}</li>)
+        headings = this.state.headings.map(heading=><li key={heading} id={heading}>{heading}</li>)
+        return (
+          <div>
+            <h3>Your wiki has been successfully created!</h3>
+            <span><strong>Game title: </strong>{this.state.title}</span><br/>
+            <span><strong>Released: </strong>{this.state.year}</span><br/>
+            <span><strong>Article Headings: </strong><ul>{headings}</ul></span><br/>
+            <span><strong>Moderators: </strong><ul>{moderators}</ul></span>
+          </div>
+        )
       default:
 
     }
   }
 
+  componentDidMount(){
+    let d = new Date()
+    let currentYear = d.getFullYear()
+    this.setState({
+      year: `${currentYear}`
+    })
+  }
+
   render() {
-    let whichSection = this.getNewGameSection()
-    console.log(this.state.progress)
+    let whichSection = this.props.loggedIn ? this.getNewGameSection() : "You must be logged in to start new Wikis!"
     return (
       <div className="newGameContainer">
-        <h3>Set up a new wiki!</h3>
         {whichSection}
       </div>
     )

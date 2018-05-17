@@ -65,7 +65,7 @@ class App extends Component {
       case "MDE":
         return <MDE />
       case "newGame":
-        return <NewGame />
+        return <NewGame loggedIn={this.state.loggedIn }/>
       default:
         return null
     }
