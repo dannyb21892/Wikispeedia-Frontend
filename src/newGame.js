@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from 'react-router-dom'
 
 class NewGame extends React.Component {
   state={
@@ -8,6 +9,7 @@ class NewGame extends React.Component {
     headings: ["General Knowledge", "Game Locations", "Glitches"],
     currentModerator: "",
     moderators: [],
+    slug: "",
     progress: 1
   }
 
@@ -99,6 +101,7 @@ class NewGame extends React.Component {
         })
         break;
       case 3:
+        let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
         fetch("http://localhost:3000/api/v1/games",{
           method: "POST",
           headers: {
@@ -109,7 +112,8 @@ class NewGame extends React.Component {
             title: this.state.title,
             year: this.state.year,
             headings: this.state.headings,
-            moderators: [...this.state.moderators, localStorage.getItem("username")]
+            moderators: [...this.state.moderators, localStorage.getItem("username")],
+            slug: slug
           })
         })
         .then(response=>response.json())
@@ -117,7 +121,8 @@ class NewGame extends React.Component {
           console.log(json)
           if (json.success){
             this.setState({
-              progress: this.state.progress + 1
+              progress: this.state.progress + 1,
+              slug: json.game.slug.name
             })
           }
         })
@@ -180,7 +185,8 @@ class NewGame extends React.Component {
       case 4:
         moderators = [...this.state.moderators, localStorage.getItem("username")].map(moderator=><li key={moderator} id={moderator}>{moderator}</li>)
         headings = this.state.headings.map(heading=><li key={heading} id={heading}>{heading}</li>)
-        let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\;':<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
+        let link = this.props.URL+"games/"+this.state.slug
+        let linkto = "games/"+this.state.slug
         return (
           <div>
             <h3>Your wiki has been successfully created!</h3>
@@ -188,7 +194,7 @@ class NewGame extends React.Component {
             <span><strong>Released: </strong>{this.state.year}</span><br/>
             <span><strong>Article Headings: </strong><ul>{headings}</ul></span><br/>
             <span><strong>Moderators: </strong><ul>{moderators}</ul></span><br /><br />
-            <span>Your game can be found at the following link: localhost:3001/games/{slug}</span>
+            <span>Your game can be found at the following link: <Link to={linkto}>{link}</Link></span>
           </div>
         )
       default:

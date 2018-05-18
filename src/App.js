@@ -66,7 +66,7 @@ class App extends Component {
       case "MDE":
         return <MDE />
       case "newGame":
-        return <NewGame loggedIn={this.state.loggedIn }/>
+        return <NewGame loggedIn={this.state.loggedIn } URL={this.props.URL}/>
       case "gamesContainer":
         return "Games container will eventually go here"
       case "game":
