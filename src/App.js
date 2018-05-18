@@ -5,6 +5,8 @@ import AuthContainer from "./AuthContainer"
 import MDE from "./MDE"
 import NewGame from "./newGame"
 import Game from "./Game"
+import GamesContainer from "./GamesContainer"
+import NavBar from "./NavBar"
 import './App.css';
 
 class App extends Component {
@@ -68,7 +70,7 @@ class App extends Component {
       case "newGame":
         return <NewGame loggedIn={this.state.loggedIn } URL={this.props.URL}/>
       case "gamesContainer":
-        return "Games container will eventually go here"
+        return <GamesContainer />
       case "game":
         let slug = window.location.href.split("/games/")[1]
         return <Game slug={slug} />
@@ -79,15 +81,18 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div className="App">
-          <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
-          <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
-          <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
-          <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
-          <Route path="/games/" render={()=>this.createRouteComponent("game")} />
-        </div>
-      </Router>
+      <div className="App">
+        <NavBar loggedIn={this.state.loggedIn} logout={this.logout}/>
+        <Router>
+          <div className="Routes" >
+            <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
+            <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
+            <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
+            <Route exact strict path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
+            <Route strict path="/games/" render={()=>this.createRouteComponent("game")} />
+          </div>
+        </Router>
+      </div>
     );
   }
 
