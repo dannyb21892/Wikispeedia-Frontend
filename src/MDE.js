@@ -14,13 +14,18 @@ class MDE extends React.Component<{}, AppState> {
     constructor(props) {
         super(props);
         this.state = {
-            mdeState: null,
+            mdeState: {markdown: this.props.markdown || ""},
         };
         this.converter = new Showdown.Converter({tables: true, simplifiedAutoLink: true});
     }
 
     handleValueChange = (mdeState: ReactMdeTypes.MdeState) => {
+        console.log(mdeState)
         this.setState({mdeState});
+    }
+
+    submitContent = () => {
+      this.props.submitContent(this.state.mdeState)
     }
 
     render() {
@@ -31,6 +36,7 @@ class MDE extends React.Component<{}, AppState> {
                     editorState={this.state.mdeState}
                     generateMarkdownPreview={(markdown) => Promise.resolve(this.converter.makeHtml(markdown))}
                 />
+                <button onClick={this.submitContent}>Submit</button>
             </div>
         );
     }

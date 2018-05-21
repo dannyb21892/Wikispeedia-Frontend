@@ -7,6 +7,7 @@ import NewGame from "./newGame"
 import Game from "./Game"
 import GamesContainer from "./GamesContainer"
 import NavBar from "./NavBar"
+import Article from "./Article"
 import './App.css';
 
 class App extends Component {
@@ -73,7 +74,9 @@ class App extends Component {
         return <GamesContainer />
       case "game":
         let slug = window.location.href.split("/games/")[1]
-        return <Game slug={slug} />
+        return <Game slug={slug} createRouteComponent={this.createRouteComponent}/>
+      case "article":
+        return <Article content={<h1>title test</h1>}/>
       default:
         return null
     }
@@ -88,14 +91,17 @@ class App extends Component {
             <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
             <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
             <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
-            <Route exact strict path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
-            <Route strict path="/games/" render={()=>this.createRouteComponent("game")} />
+            <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
+            <Route exact path={`/games/:game`} component={Game} />
+            <Route path={`/games/:game/:article`} component={Article} />
+
           </div>
         </Router>
       </div>
     );
   }
-
+// <Route path={`/games/:game/:article`} render={()=>this.createRouteComponent("article")} />
+// render={()=>this.createRouteComponent("game")} />
   clearStorage(){
     if (localStorage.getItem("auto") !== "true") {
       localStorage.removeItem("username")
