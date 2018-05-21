@@ -1,9 +1,12 @@
 import React from "react"
+import Sidebar from "./Sidebar"
 
 class Game extends React.Component {
   state={
     success: true,
-    game: {}
+    game: {},
+    headings: [],
+    articles: []
   }
 
   render() {
@@ -12,6 +15,10 @@ class Game extends React.Component {
       <div className="Game">
         <h1>{this.state.game.title}</h1>
         <h5>Released: {this.state.game.release_year}</h5>
+        <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}}/>
+        <div className="main">
+          Some stuff
+        </div>
       </div>
     )
     return gameOrNot
@@ -30,7 +37,9 @@ class Game extends React.Component {
       console.log(json)
       if (json.match){
         this.setState({
-          game: json.match
+          game: json.match,
+          headings: json.headings,
+          articles: json.articles
         })
       } else {
         this.setState({
