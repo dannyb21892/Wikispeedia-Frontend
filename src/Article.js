@@ -1,12 +1,16 @@
 import React from "react"
 import MDE from "./MDE"
+import Sidebar from "./Sidebar"
 
 class Article extends React.Component {
   state={
     editing: this.props.editing || false,
     markdown: "",
     html: "",
-    title: ""
+    title: "",
+    headings: [],
+    articles: [],
+    game: {}
   }
 
   editArticle = () => {
@@ -33,10 +37,7 @@ class Article extends React.Component {
     })
     .then(response => response.json())
     .then(json => {
-        console.log(json)
-        console.log(this.props.match)
-        debugger
-        window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + `${json.title}`
+        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.title}`
     })
   }
 
@@ -56,9 +57,18 @@ class Article extends React.Component {
         </div>
       )
     } else {
-      show = <div><div dangerouslySetInnerHTML={{ __html: this.state.html }} /><button onClick={this.editArticle}>Edit</button></div>
+      show = <div><div dangerouslySetInnerHTML={{ __html: this.state.html }} />{this.props.loggedIn && this.state.html !== "" ? <button onClick={this.editArticle}>Edit</button> : null}</div>
     }
-    return show
+    return (
+      <div>
+        <div style={{width: 250}}>
+          <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
+        </div>
+        <div className="main">
+          {show}
+        </div>
+      </div>
+    )
   }
 
   componentDidMount(){
@@ -79,7 +89,10 @@ class Article extends React.Component {
         this.setState({
           markdown: json.markdown,
           html: json.html.replace("↵",""),
-          title: json.title
+          title: json.title,
+          headings: json.headings,
+          articles: json.articles,
+          game: json.game
         })
       }
     })

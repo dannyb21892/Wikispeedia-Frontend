@@ -1,18 +1,16 @@
 import React from 'react';
-import SideNav, { Nav, NavText } from 'react-sidenav';
-// https://www.npmjs.com/package/react-sidenav
 
 class Sidebar extends React.Component {
-    state = {
-      classname: {}
-    }
+  state = {
+    classname: {}
+  }
 
   setHeadings = () => {
     let classnames = {}
     this.props.info.headings.forEach((h,i) => {
       classnames[`${i}`] = "sidenav-list"
     })
-    this.state.classname = classnames
+    this.setState({classname: classnames})
   }
 
   navigateToArticle = (e) => {
@@ -28,9 +26,9 @@ class Sidebar extends React.Component {
 
   openArticle = (e) => {
     if (window.location.href.slice(-1) === "/"){
-      window.location.href = window.location.href + e.target.innerHTML
+      window.location.href = window.location.href.split("/").slice(0,5).join("/") + e.target.innerHTML
     } else {
-      window.location.href = window.location.href + "/" + e.target.innerHTML
+      window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + e.target.innerHTML
     }
   }
 
@@ -39,12 +37,12 @@ class Sidebar extends React.Component {
     let navs = this.props.info.headings.map((h, i) => {
       let articles = this.props.info.articles[i].map(a => {
         return (
-            <li className="sidenav-li" onClick={this.openArticle}>{a.title}</li>
+            <li className="sidenav-li" onClick={this.openArticle} key={a.id}>{a.title}</li>
           )
         }
       )
       return (
-          <div className ="sidenav-menu">
+          <div className="sidenav-menu" key={h.id}>
               <a name={`${i}`} onClick={this.toggleClass}>{h.name}<button onClick={this.props.addArticle}>+</button></a>
               <ul className ={this.state.classname[`${i}`]}>
                 {articles}

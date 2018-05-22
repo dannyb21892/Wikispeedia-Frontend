@@ -61,7 +61,7 @@ class App extends Component {
     window.addEventListener('beforeunload', this.clearStorage);
   }
 
-  createRouteComponent = (type) => {
+  createRouteComponent = (type, props) => {
     switch (type) {
       case "AuthContainer":
         return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
@@ -72,10 +72,9 @@ class App extends Component {
       case "gamesContainer":
         return <GamesContainer />
       case "game":
-        let slug = window.location.href.split("/games/")[1]
-        return <Game slug={slug} createRouteComponent={this.createRouteComponent}/>
+        return <Game loggedIn={this.state.loggedIn} {...props}/>
       case "article":
-        return <Article content={<h1>title test</h1>}/>
+        return <Article loggedIn={this.state.loggedIn} {...props}/>
       default:
         return null
     }
@@ -91,8 +90,8 @@ class App extends Component {
             <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
             <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
             <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
-            <Route exact path={`/games/:game`} component={Game} />
-            <Route path={`/games/:game/:article`} component={Article} />
+            <Route exact path={`/games/:game`} render={(props)=>this.createRouteComponent("game",props)} />
+            <Route path={`/games/:game/:article`} render={(props)=>this.createRouteComponent("article", props)}/>
 
           </div>
         </Router>
