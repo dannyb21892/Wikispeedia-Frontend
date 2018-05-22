@@ -61,28 +61,3 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
-
-// let navs = this.props.info.headings.map((h, i) => {
-// let articles = this.props.info.articles[i].map(a => {
-//       return (
-//         <Nav key={a.id} style={{width:"100%", borderStyle:"solid", borderWidth:"5px", borderColor:"black"}}>
-//           <NavText><div id={a.title} onClick={this.navigateToArticle}>{a.title}</div></NavText>
-//         </Nav>
-//       )
-//     }
-//   )
-//   return (
-//       <Nav key={h.id} id={h.name} style={{position:"absolute", borderStyle:"solid", borderWidth:"5px", borderColor:"black"}}>
-//         <NavText> {h.name} </NavText>
-//         {articles}
-//       </Nav>
-//     )
-//   }
-// )
-// return (
-//   <div style={{background: '#2c3e50', color: '#FFF', width: "100%"}}>
-//       <SideNav highlightColor='#F5F5F5' highlightBgColor='#00bcd4' defaultSelected='sales'>
-//         {navs}
-//       </SideNav>
-//   </div>
-// }
