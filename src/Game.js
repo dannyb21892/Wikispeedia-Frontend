@@ -14,7 +14,9 @@ class Game extends React.Component {
 
   addArticle = (e) => {
     let heading = e.target.parentNode.innerHTML.replace("<button>+</button>","")
-    let article = <Article editing={true} newArticle={true} heading={heading} match={{params: {game: window.location.href.split("/").splice(-1)[0], article: null}}}/>
+    let game = window.location.href.split("/").splice(-2)
+    game = game[1] === "" ? game[0] : game[1]
+    let article = <Article editing={true} newArticle={true} heading={heading} match={{params: {game: game, article: null}}}/>
     this.setState({
       articleComponent: article
     })
@@ -31,7 +33,6 @@ class Game extends React.Component {
   }
 
   render() {
-    console.log(this.state.articleComponent)
     let gameOrNot = !this.state.success ? <div className="noGame">Sorry, that game could not be found.</div> : (
       <div className="Game">
         <h1>{this.state.game.title}</h1>
@@ -51,7 +52,6 @@ class Game extends React.Component {
     fetch(`http://localhost:3000/api/v1/games/${this.props.match.params.game}`)
     .then(response=>response.json())
     .then(json=>{
-      console.log(json)
       if (json.match){
         this.setState({
           game: json.match,

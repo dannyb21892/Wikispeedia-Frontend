@@ -3,8 +3,16 @@ import SideNav, { Nav, NavText } from 'react-sidenav';
 // https://www.npmjs.com/package/react-sidenav
 
 class Sidebar extends React.Component {
-  state={
-    classname: {"0": "sidenav-list", "1":"sidenav-list"}
+    state = {
+      classname: {}
+    }
+
+  setHeadings = () => {
+    let classnames = {}
+    this.props.info.headings.forEach((h,i) => {
+      classnames[`${i}`] = "sidenav-list"
+    })
+    this.state.classname = classnames
   }
 
   navigateToArticle = (e) => {
@@ -12,17 +20,26 @@ class Sidebar extends React.Component {
   }
 
   toggleClass = (e) => {
-    let value = this.state.classname[e.target.name] === "active" ? "sidenav-list" : "active"
+    let value = (this.state.classname[e.target.name] === "active") ? "sidenav-list" : "active"
     this.setState({
       classname: {...this.state.classname, [e.target.name]: value}
     })
   }
 
+  openArticle = (e) => {
+    if (window.location.href.slice(-1) === "/"){
+      window.location.href = window.location.href + e.target.innerHTML
+    } else {
+      window.location.href = window.location.href + "/" + e.target.innerHTML
+    }
+  }
+
   render() {
+    if (Object.keys(this.state.classname).length === 0 && this.props.info.headings.length > 0) {this.setHeadings()}
     let navs = this.props.info.headings.map((h, i) => {
       let articles = this.props.info.articles[i].map(a => {
         return (
-            <li className="sidenav-li">{a.title}</li>
+            <li className="sidenav-li" onClick={this.openArticle}>{a.title}</li>
           )
         }
       )

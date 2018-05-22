@@ -30,7 +30,6 @@ class App extends Component {
     })
     .then(response=>response.json())
     .then(json=>{
-      console.log(json)
       if (json.logged_in){
         this.logIn(localStorage.getItem("username"))
       }

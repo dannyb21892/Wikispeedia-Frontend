@@ -33,15 +33,10 @@ class Article extends React.Component {
     })
     .then(response => response.json())
     .then(json => {
-      if(this.props.newArticle){
-        window.location.href = window.location.href + "/" + `${json.title}`
-      } else {
-        this.setState({
-          markdown: json.markdown,
-          html: json.html.replace("↵",""),
-          editing: false
-        })
-      }
+        console.log(json)
+        console.log(this.props.match)
+        debugger
+        window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + `${json.title}`
     })
   }
 
