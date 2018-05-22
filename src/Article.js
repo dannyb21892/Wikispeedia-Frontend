@@ -3,9 +3,10 @@ import MDE from "./MDE"
 
 class Article extends React.Component {
   state={
-    editing: false,
+    editing: this.props.editing || false,
     markdown: "",
-    html: ""
+    html: "",
+    title: ""
   }
 
   editArticle = () => {
@@ -21,26 +22,47 @@ class Article extends React.Component {
        'Content-type':'application/json'
       },
       body: JSON.stringify({
-        type: "updateArticle",
+        type: this.props.newArticle ? "newArticle" : "updateArticle",
         content: mdeState.markdown,
-        html_content:  mdeState.html,
+        html_content: mdeState.html,
         game: this.props.match.params.game,
-        article: this.props.match.params.article
+        article: this.props.match.params.article,
+        heading: this.props.heading,
+        title: this.state.title
       })
     })
     .then(response => response.json())
-    .then(json => this.setState({
-      markdown: json.markdown,
-      html: json.html.replace("↵",""),
-      editing: false
-    }))
+    .then(json => {
+      if(this.props.newArticle){
+        window.location.href = window.location.href + "/" + `${json.title}`
+      } else {
+        this.setState({
+          markdown: json.markdown,
+          html: json.html.replace("↵",""),
+          editing: false
+        })
+      }
+    })
+  }
+
+  titleChange = (e) => {
+    this.setState({
+      title: e.target.value
+    })
   }
 
   render() {
-    let show = this.state.editing ?
-    <div><MDE markdown={this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/></div> :
-    <div><div dangerouslySetInnerHTML={{ __html: this.state.html }} /><button onClick={this.editArticle}>Edit</button></div>
-
+    let show
+    if(this.state.editing){
+      show = (
+        <div>
+          <input value={this.state.title} placeholder="Article Title" onChange={this.titleChange} /><br />
+          <MDE markdown={this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/>
+        </div>
+      )
+    } else {
+      show = <div><div dangerouslySetInnerHTML={{ __html: this.state.html }} /><button onClick={this.editArticle}>Edit</button></div>
+    }
     return show
   }
 
@@ -57,10 +79,15 @@ class Article extends React.Component {
       })
     })
     .then(response => response.json())
-    .then(json => this.setState({
-      markdown: json.markdown,
-      html: json.html.replace("↵","")
-    }))
+    .then(json => {
+      if(json.success){
+        this.setState({
+          markdown: json.markdown,
+          html: json.html.replace("↵",""),
+          title: json.title
+        })
+      }
+    })
   }
 }
 
