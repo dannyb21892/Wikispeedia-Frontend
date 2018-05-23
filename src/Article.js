@@ -10,7 +10,9 @@ class Article extends React.Component {
     title: "",
     headings: [],
     articles: [],
-    game: {}
+    game: {},
+    edits: [{html_content: "", content: "", title: ""}],
+    currentEdit: 0
   }
 
   editArticle = () => {
@@ -47,8 +49,18 @@ class Article extends React.Component {
     })
   }
 
+  changeCurrentEdit = e => {
+    if(e.target.innerText === "<"){
+      this.setState({currentEdit: this.state.currentEdit-1})
+    } else if (e.target.innerText === ">"){
+      this.setState({currentEdit: this.state.currentEdit+1})
+    }
+  }
+
   render() {
+    console.log(this.state.edits, this.state.currentEdit, this.state.edits[this.state.currentEdit].html_content)
     let show
+    let edits=null
     if(this.state.editing){
       show = (
         <div>
@@ -57,7 +69,8 @@ class Article extends React.Component {
         </div>
       )
     } else {
-      show = <div><div dangerouslySetInnerHTML={{ __html: this.state.html }} />{this.props.loggedIn && this.state.html !== "" ? <button onClick={this.editArticle}>Edit</button> : null}</div>
+      edits = <div>View older revisions of this article: <button disabled={this.state.currentEdit === 0} onClick={this.changeCurrentEdit}>{"<"}</button><button disabled={this.state.currentEdit === this.state.edits.length - 1} onClick={this.changeCurrentEdit}>{">"}</button></div>
+      show = <div><div dangerouslySetInnerHTML={{ __html: this.state.edits[this.state.currentEdit].html_content }} />{this.props.loggedIn && this.state.edits[this.state.currentEdit].html_content !== "" ? <button onClick={this.editArticle}>Edit</button> : null}</div>
     }
     return (
       <div>
@@ -65,6 +78,7 @@ class Article extends React.Component {
           <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
         </div>
         <div className="main">
+        {edits}
           {show}
         </div>
       </div>
@@ -92,6 +106,8 @@ class Article extends React.Component {
           title: json.title,
           headings: json.headings,
           articles: json.articles,
+          edits: json.approvedEdits,
+          currentEdit: json.approvedEdits.length-1,
           game: json.game
         })
       }

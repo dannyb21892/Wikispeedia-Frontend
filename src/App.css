@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+body {
+  background-color: #dce2ed;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -43,9 +47,27 @@
 		top: 0;
 		width: 100%;
 		z-index: 10000;
-		box-shadow: 0 0 0.1em 0 rgba(0, 0, 0, 0.25);
+		box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.5);
+    border-bottom: 1px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-color: #435860;
+    border-style: solid;
 	}
-
+    #header div.ui.card.fluid.raised {
+      border: 1px;
+      border-color: black;
+      border-style: solid;
+    }
+    #header div.meta {
+      border-top: 0px;
+      border-bottom: 1px;
+      border-left: 0px;
+      border-right: 0px;
+      border-color: #bfbfbf;
+      border-style: solid;
+    }
 		#header h2 {
 			color: #666f77;
 			font-weight: 500;
@@ -206,4 +228,14 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+}
+
+/* MDE */
+
+.react-mde {
+  width: 75%;
+  margin-left: 12.5%;
+}
+.react-mde-content {
+  background-color: white;
 }

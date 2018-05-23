@@ -2,6 +2,8 @@ import React from "react"
 import { Card, Icon, Image, Feed } from 'semantic-ui-react'
 // https://react.semantic-ui.com/views/card#card-example-content-block
 import icon from "./assets/gamepad-with-joystick (1).png"
+import bell from "./assets/bell (1).png"
+import redDot from "./assets/circle-8.png"
 
 class NavBar extends React.Component {
   state = {
@@ -41,31 +43,48 @@ class NavBar extends React.Component {
 
   searchResults = () => {
     let r = this.state.results
-    let exactMatch = r.gameAlreadyExists ? <Card.Content><a>{r.game.title}</a></Card.Content> : null
-    let sheader = r.suggestions.games.length > 0 ? (
+    let exactMatch = r.gameAlreadyExists ? (
       <Card.Content>
-        <Card.Header>
-          Games with similar titles
-        </Card.Header>
-      </Card.Content>
-    ) : null
-    let suggestions = r.suggestions.games.length > 0 ? (
-      <Card.Content>
+        <Card.Meta>
+          Exact match
+        </Card.Meta>
         <Feed>
-          {r.suggestions.games.map((g,i) => {
-            return (
-            <Feed.Event>
-              <Feed.Label image={icon} />
-              <Feed.Content>
-                <Feed.Summary>
-                  <a href={`http://localhost:3001/games/${r.suggestions.slugs[i].name}`}>{g.title}</a>
-                </Feed.Summary>
-              </Feed.Content>
-            </Feed.Event>
-          )})}
+          <Feed.Event>
+            <Feed.Label image={icon} />
+            <Feed.Content>
+              <Feed.Summary>
+                <a href={`http://localhost:3001/games/${r.game.slug.name}`}>{r.game.title}</a>
+              </Feed.Summary>
+            </Feed.Content>
+          </Feed.Event>
         </Feed>
       </Card.Content>
     ) : null
+    let sheader = r.suggestions.games.length > 0 ? "Games with similar titles" : "No matches found"
+    let feed = r.suggestions.games.length > 0 ? (
+      <Feed>
+        {r.suggestions.games.slice(0,20).map((g,i) => {
+          return (
+          <Feed.Event key={i}>
+            <Feed.Label image={icon} />
+            <Feed.Content>
+              <Feed.Summary>
+                <a href={`http://localhost:3001/games/${r.suggestions.slugs[i].name}`}>{g.title}</a>
+              </Feed.Summary>
+            </Feed.Content>
+          </Feed.Event>
+        )})}
+      </Feed>
+    ) : null
+    let suggestions = (
+      <Card.Content>
+        <Card.Meta>
+          {sheader}
+        </Card.Meta>
+        {feed}
+      </Card.Content>
+    )
+
   //   <Feed.Label image='/assets/images/avatar/small/jenny.jpg' />
   //   <Feed.Content>
   //     <Feed.Date content='1 day ago' />
@@ -75,10 +94,9 @@ class NavBar extends React.Component {
   //   </Feed.Content>
   // </Feed.Event>
     return (
-      <div style={{width: "30%", float: "right", marginTop: "40px", height: "150px", overflow: "auto"}}>
+      <div style={{width: "30%", float: "right", marginTop: "40px", marginRight: "10px", height: "300px", overflow: "auto"}}>
         <Card fluid raised>
           {exactMatch}
-          {sheader}
           {suggestions}
         </Card>
       </div>
@@ -103,6 +121,8 @@ class NavBar extends React.Component {
     let logInOrOut = this.props.loggedIn ? <li className="button"><a onClick={this.props.logout} className="button special">Log Out</a></li> : <li className="button special"><a href="/login" className="button special">Sign Up or Log In</a></li>
     let profile = this.props.loggedIn ? <li className="button"><a onClick={() => window.location.href = `http://localhost:3001/users/${localStorage.getItem("username")}`} className="button special">{localStorage.getItem("username")}</a></li> : null
     let results = Object.keys(this.state.results).length > 0 ? this.searchResults() : null
+    let dot = this.props.loggedIn ? <div style={{backgroundImage:`url(${redDot})`, height:8, width:8}}/> : null
+    let notifications = this.props.loggedIn ? <li><div style={{backgroundImage: `url(${bell})`, width: 24, height: 24, marginTop: -17, marginLeft: -13, position: "absolute", cursor:"pointer"}}>{dot}</div></li> : null
     return (
       <header id="header" className="skel-layers-fixed">
 				<h2><a href="/">WikiSpeedia</a></h2>
@@ -110,6 +130,7 @@ class NavBar extends React.Component {
 					<ul>
 						<li><input type="text" placeholder="find a game" value={this.state.search} onChange={this.handleChange} onBlur={this.handleBlur} onFocus={this.handleFocus}/></li>
 						{profile}
+            {notifications}
 						{logInOrOut}
 					</ul>
 				</nav>
