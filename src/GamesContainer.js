@@ -8,7 +8,12 @@ class GamesContainer extends React.Component {
 
   render(){
     let games = this.state.games.map(game=><li key={game.slug}><Link to={"/games/"+game.slug}>{game.title}</Link></li>)
-    return games
+    return (
+      <div>
+        {games}<br />
+        <button onClick={()=>window.location.href = "http://localhost:3001/newgame"}>Start a new wiki</button>
+      </div>
+    )
   }
 
   componentDidMount(){

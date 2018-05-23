@@ -63,6 +63,8 @@ class App extends Component {
 
   createRouteComponent = (type, props) => {
     switch (type) {
+      case "home":
+        return <a href="http://localhost:3001/games">Games List</a>
       case "AuthContainer":
         return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       case "MDE":
@@ -86,6 +88,7 @@ class App extends Component {
         <NavBar loggedIn={this.state.loggedIn} logout={this.logout}/>
         <Router>
           <div className="Routes" >
+            <Route exact strict path="/" render={()=>this.createRouteComponent("home")} />
             <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
             <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
             <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />

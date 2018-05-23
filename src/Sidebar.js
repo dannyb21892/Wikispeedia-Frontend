@@ -25,11 +25,7 @@ class Sidebar extends React.Component {
   }
 
   openArticle = (e) => {
-    if (window.location.href.slice(-1) === "/"){
-      window.location.href = window.location.href.split("/").slice(0,5).join("/") + e.target.innerHTML
-    } else {
-      window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + e.target.innerHTML
-    }
+    window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + e.target.innerHTML
   }
 
   render() {
