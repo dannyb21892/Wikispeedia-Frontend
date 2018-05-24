@@ -106,8 +106,8 @@ class Article extends React.Component {
           title: json.title,
           headings: json.headings,
           articles: json.articles,
-          edits: json.approvedEdits,
-          currentEdit: json.approvedEdits.length-1,
+          edits: json.approvedEdits.length > 0 ? json.approvedEdits : [{html_content: json.html.replace("↵",""), content: json.markdown, title: ""}],
+          currentEdit: json.approvedEdits.length > 0 ? json.approvedEdits.length-1 : this.state.currentEdit,
           game: json.game
         })
       }
