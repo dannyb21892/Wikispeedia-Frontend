@@ -13,7 +13,8 @@ import './App.css';
 class App extends Component {
   state = {
     loggedIn: false,
-    username: ""
+    username: "",
+    checkedLogin: false
   }
 
   autoLogin = () => {
@@ -32,14 +33,17 @@ class App extends Component {
     .then(json=>{
       if (json.logged_in){
         this.logIn(localStorage.getItem("username"))
+      } else {
+        this.logIn("", true)
       }
     })
   }
 
-  logIn = (username) => {
+  logIn = (username, setChecked) => {
     this.setState({
-      loggedIn: true,
-      username: username
+      loggedIn: username !== "",
+      username: username,
+      checkedLogin: true
     })
   }
 
@@ -76,7 +80,7 @@ class App extends Component {
       case "game":
         return <Game loggedIn={this.state.loggedIn} {...props}/>
       case "article":
-        return <Article loggedIn={this.state.loggedIn} {...props}/>
+        return <Article checkedLogin={this.state.checkedLogin} loggedIn={this.state.loggedIn} {...props}/>
       default:
         return null
     }
