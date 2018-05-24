@@ -97,12 +97,12 @@ class Article extends React.Component {
                 <span>This article revision is {this.state.allEdits[this.state.currentEditMods].status === "pending" ? this.state.allEdits[this.state.currentEditMods].status + " moderator action" : "already " + this.state.allEdits[this.state.currentEditMods].status}</span>
               </div>
       show = <div>
-              <div dangerouslySetInnerHTML={{ __html: this.state.edits[this.state.currentEditPlebs].html_content }} />
+              <div dangerouslySetInnerHTML={{ __html: this.state.showEdits ? this.state.allEdits[this.state.currentEditMods].html_content : this.state.edits[this.state.currentEditPlebs].html_content}} />
               {this.props.loggedIn && this.state.edits[this.state.currentEditPlebs].html_content !== "" && this.state.currentEditPlebs === this.state.edits.length-1 && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : null}
               {this.state.moderator && this.state.showEdits ? (
                 <div>
-                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "denied" ? <button onClick={() => this.approveOrRejectEdit("approve")}>Approve this revision</button> : null}
-                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <button onClick={()=> this.approveOrRejectEdit("reject")}>Reject this revision</button> : null}
+                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <button onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</button> : null}
+                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <button onClick={()=> this.approveOrRejectEdit("rejected")}>Reject this revision</button> : null}
                 </div>
               ) : null}
             </div>
@@ -138,6 +138,7 @@ class Article extends React.Component {
       })
       .then(response => response.json())
       .then(json => {
+        console.log(json)
         if(json.success){
           this.setState({
             markdown: json.markdown,
