@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #dce2ed;
+  background-color: #808389;
 }
 
 .App-logo {
@@ -214,10 +214,10 @@ body {
     }
 
 .sidenav-wrapper {
-  margin: 0px auto;
+  margin-left: 5%;
   width:100%;
-  display: block;
-  overflow: auto;
+  /* display: block; */
+  /* overflow: auto; */
   background-color: #1D1F20;;
 }
 
@@ -244,4 +244,80 @@ body {
 }
 .react-mde-content {
   background-color: white;
+}
+
+/* content */
+.contentWrapper{
+  display: flex;
+  align-items: flex-start;
+}
+.contentWrapper > div {
+  margin: 10px;
+}
+.main {
+  flex-grow: 1;
+  background-color: #293344;
+  color: white;
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4)
+}
+.sidebarWrapper {
+  background-color: #293344;
+  border-radius: 10px;
+  border: black 2px solid;
+  width: 20%;
+  padding-bottom: 15px;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4)
+}
+.navHeader {
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: black 1px solid;
+  border-bottom: black 1px solid;
+  background-color: #48505e;
+  transition: color 0.25s linear;
+}
+.navHeader:hover{
+  color: white;
+}
+.navHeader.first{
+  border-top-right-radius: 10px;
+  border-top: black 0px solid;
+  border-top-left-radius: 10px;
+}
+.navHeader.last>div.article.last{
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.article {
+  visibility: hidden;
+  opacity: 0;
+  height: 0px;
+  padding: 0px;
+  text-align:right;
+  background-color: #293344;
+  transition: height 0.5s ease, padding 0.5s ease, opacity 0.5s linear;
+}
+.article.expanded {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+  padding: 3px;
+  height:30px;
+  text-align:right;
+  background-color: #293344;
+}
+.article>a{
+  cursor: pointer;
+  color: black;
+  transition: color 0.25s linear;
+}
+.article>a:hover{
+  cursor: pointer;
+  color: white;
+
 }

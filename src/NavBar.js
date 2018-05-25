@@ -153,7 +153,6 @@ class NavBar extends React.Component {
   }
 
   render() {
-    console.log(this.state.notifications)
     let logInOrOut = this.props.loggedIn ? <li className="button"><a onClick={this.props.logout} className="button special">Log Out</a></li> : <li className="button special"><a href="/login" className="button special">Sign Up or Log In</a></li>
     let profile = this.props.loggedIn ? <li className="button"><a onClick={() => window.location.href = `http://localhost:3001/users/${localStorage.getItem("username")}`} className="button special">{localStorage.getItem("username")}</a></li> : null
     let results = Object.keys(this.state.results).length > 0 && !this.state.showNotifications ? this.searchResults() : null

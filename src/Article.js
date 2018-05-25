@@ -108,8 +108,8 @@ class Article extends React.Component {
             </div>
     }
     return (
-      <div>
-        <div style={{width: 250}}>
+      <div className="contentWrapper">
+        <div className="sidebarWrapper">
           <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
         </div>
         <div className="main">
