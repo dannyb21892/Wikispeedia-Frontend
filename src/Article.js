@@ -9,8 +9,10 @@ class Article extends React.Component {
     html: "",
     title: "",
     headings: [],
+    heading: "",
     articles: [],
     game: {},
+    newArticle: this.props.newArticle,
     edits: [{html_content: "", content: "", title: ""}],
     allEdits: [{html_content: "", content: "", title: "", status: ""}],
     currentEditMods: 0,
@@ -22,30 +24,43 @@ class Article extends React.Component {
 
   editArticle = () => {
     this.setState({
-      editing: true
+      editing: true,
+      newArticle: false
+    })
+  }
+
+  addArticle = (e, heading) => {
+    this.setState({
+      editing: true,
+      newArticle: true,
+      heading: heading.name
     })
   }
 
   submitContent = (mdeState) => {
+    let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
+    console.log(slug, this.state.newArticle, this.props.heading, this.state.heading, this.state.title, mdeState)
+    debugger
     fetch("http://localhost:3000/api/v1/articles",{
       method: "POST",
       headers: {
        'Content-type':'application/json'
       },
       body: JSON.stringify({
-        type: this.props.newArticle ? "newArticle" : "updateArticle",
+        type: this.state.newArticle ? "newArticle" : "updateArticle",
         content: mdeState.markdown,
         html_content: mdeState.html,
         game: this.props.match.params.game,
         article: this.props.match.params.article,
-        heading: this.props.heading,
+        heading: this.state.heading,
         title: this.state.title,
-        moderator: this.state.moderator
+        moderator: this.state.moderator,
+        slug: slug
       })
     })
     .then(response => response.json())
     .then(json => {
-        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.title}`
+        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.slug}`
     })
   }
 
@@ -80,6 +95,7 @@ class Article extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     let show
     let showEditsOrNot = null
     let edits=null
@@ -145,6 +161,7 @@ class Article extends React.Component {
             html: json.html.replace("↵",""),
             title: json.title,
             headings: json.headings,
+            heading: json.heading,
             articles: json.articles,
             edits: json.approvedEdits.length > 0 ? json.approvedEdits : [{html_content: json.html.replace("↵",""), content: json.markdown, title: ""}],
             allEdits: json.all_edits,
@@ -153,6 +170,14 @@ class Article extends React.Component {
             game: json.game,
             moderator: json.moderator,
             gotContents: true,
+          })
+        } else {
+          console.log(json.articles, "**********")
+          this.setState({
+            headings: json.headings,
+            articles: json.articles,
+            game: json.game,
+            gotContents: true
           })
         }
       })

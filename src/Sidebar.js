@@ -32,7 +32,8 @@ class Sidebar extends React.Component {
   }
 
   openArticle = (e) => {
-    window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + e.target.innerHTML
+    let slug = e.target.innerHTML.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
+    window.location.href = window.location.href.split("/").slice(0,5).join("/") + "/" + slug
   }
 
   expand = (e,i) => {
@@ -50,11 +51,15 @@ class Sidebar extends React.Component {
         if(ii!==this.props.info.articles[i].length-1){articleType=" notLast"}
         return (
             <div key={ii} className={"article"+articleType+(this.state.expanded[i] ? " expanded" : "")}>
-              <a onClick={this.openArticle} key={a.id}>{a.title}</a>
+              <a className={a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_") === window.location.href.split("/")[5] ? "selected" : "notSelected"} onClick={this.openArticle} key={a.id}>{a.title}</a>
             </div>
           )
         }
       )
+      articles = [...articles, <div className={"article"+(this.state.expanded[i] ? " expanded" : "")}>
+        <a className={"notSelected"} onClick={(e) => this.props.addArticle(e, this.props.info.headings[i])}>{"+ New Article"}</a>
+      </div>]
+
       return  <div>
                   <div key={i} name={i} className={"navHeader"+headerType} onClick={(e) => this.expand(e,i)}>
                     <h4 name={i}>{h.name}</h4>
@@ -69,7 +74,10 @@ class Sidebar extends React.Component {
   componentDidUpdate() {
     if(!this.state.updated && this.props.info.headings.length > 0){
       let expanded = {}
-      this.props.info.headings.forEach((h,i)=>expanded[i]=false)
+      this.props.info.headings.forEach((h,i)=>{
+        let articles = this.props.info.articles[i].map(a => a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_"))
+        expanded[i]=articles.includes(window.location.href.split("/")[5])
+      })
       this.setState({
         expanded: expanded,
         updated: true

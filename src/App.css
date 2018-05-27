@@ -244,6 +244,7 @@ body {
 }
 .react-mde-content {
   background-color: white;
+  color: black;
 }
 
 /* content */
@@ -311,13 +312,17 @@ body {
   text-align:right;
   background-color: #293344;
 }
-.article>a{
+.article>a.notSelected{
   cursor: pointer;
   color: black;
   transition: color 0.25s linear;
 }
-.article>a:hover{
+.article>a.selected{
   cursor: pointer;
   color: white;
-
+  transition: color 0.25s linear;
+}
+.article>a.notSelected:hover{
+  cursor: pointer;
+  color: white;
 }
