@@ -8,6 +8,7 @@ import Game from "./Game"
 import GamesContainer from "./GamesContainer"
 import NavBar from "./NavBar"
 import Article from "./Article"
+import Home from "./Home"
 import './App.css';
 
 class App extends Component {
@@ -68,7 +69,12 @@ class App extends Component {
   createRouteComponent = (type, props) => {
     switch (type) {
       case "home":
-        return <a href="http://localhost:3001/games">Games List</a>
+        if (this.state.loggedIn) {
+          return <Home />//<a href="http://localhost:3001/games">Games List</a>
+        } else {
+          window.location.href = "http://localhost:3001/login"
+        }
+
       case "AuthContainer":
         return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       case "MDE":
@@ -87,23 +93,25 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="App">
-        <NavBar loggedIn={this.state.loggedIn} logout={this.logout}/>
-        <Router>
-          <div className="Routes" >
-            <Route exact strict path="/" render={()=>this.createRouteComponent("home")} />
-            <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
-            <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
-            <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
-            <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
-            <Route exact path={`/games/:game`} render={(props)=>this.createRouteComponent("game",props)} />
-            <Route path={`/games/:game/:article`} render={(props)=>this.createRouteComponent("article", props)}/>
+    if (this.state.checkedLogin){
+      return (
+        <div className="App">
+          <NavBar loggedIn={this.state.loggedIn} logout={this.logout}/>
+          <Router>
+            <div className="Routes" >
+              <Route exact strict path="/" render={()=>this.createRouteComponent("home")} />
+              <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
+              <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
+              <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
+              <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
+              <Route exact path={`/games/:game`} render={(props)=>this.createRouteComponent("game",props)} />
+              <Route path={`/games/:game/:article`} render={(props)=>this.createRouteComponent("article", props)}/>
 
-          </div>
-        </Router>
-      </div>
-    );
+            </div>
+          </Router>
+        </div>
+      )
+    } else {return null}
   }
 // <Route path={`/games/:game/:article`} render={()=>this.createRouteComponent("article")} />
 // render={()=>this.createRouteComponent("game")} />

@@ -51,7 +51,7 @@ class Sidebar extends React.Component {
         if(ii!==this.props.info.articles[i].length-1){articleType=" notLast"}
         return (
             <div key={ii} className={"article"+articleType+(this.state.expanded[i] ? " expanded" : "")}>
-              <a className={a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_") === window.location.href.split("/")[5] ? "selected" : "notSelected"} onClick={this.openArticle} key={a.id}>{a.title}</a>
+              <a className={a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_").toLowerCase() === window.location.href.split("/")[5].toLowerCase() ? "selected" : "notSelected"} onClick={this.openArticle} key={a.id}>{a.title}</a>
             </div>
           )
         }
@@ -76,7 +76,7 @@ class Sidebar extends React.Component {
       let expanded = {}
       this.props.info.headings.forEach((h,i)=>{
         let articles = this.props.info.articles[i].map(a => a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_"))
-        expanded[i]=articles.includes(window.location.href.split("/")[5])
+        expanded[i] = articles[i] ? articles[i].toLowerCase() === window.location.href.split("/")[5].toLowerCase() : false
       })
       this.setState({
         expanded: expanded,

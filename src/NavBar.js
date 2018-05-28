@@ -109,7 +109,7 @@ class NavBar extends React.Component {
             <Feed.Label image={edit} />
             <Feed.Content>
               <Feed.Summary>
-                <a href={`${e.url}`}>{e.edit.title}</a>
+                <a href={`${e.url}${e.edit.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")}`}>{e.edit.title}</a>
               </Feed.Summary>
             </Feed.Content>
           </Feed.Event>

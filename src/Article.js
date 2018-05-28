@@ -39,8 +39,6 @@ class Article extends React.Component {
 
   submitContent = (mdeState) => {
     let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
-    console.log(slug, this.state.newArticle, this.props.heading, this.state.heading, this.state.title, mdeState)
-    debugger
     fetch("http://localhost:3000/api/v1/articles",{
       method: "POST",
       headers: {
@@ -90,12 +88,11 @@ class Article extends React.Component {
     })
     .then(response => response.json())
     .then(json => {
-        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.edit.title}`
+        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.edit.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")}`
     })
   }
 
   render() {
-    console.log(this.props)
     let show
     let showEditsOrNot = null
     let edits=null
@@ -114,7 +111,7 @@ class Article extends React.Component {
               </div>
       show = <div>
               <div dangerouslySetInnerHTML={{ __html: this.state.showEdits ? this.state.allEdits[this.state.currentEditMods].html_content : this.state.edits[this.state.currentEditPlebs].html_content}} />
-              {this.props.loggedIn && this.state.edits[this.state.currentEditPlebs].html_content !== "" && this.state.currentEditPlebs === this.state.edits.length-1 && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : null}
+              {this.props.loggedIn && this.state.edits[this.state.currentEditPlebs].html_content !== "" && this.state.currentEditPlebs === this.state.edits.length-1 && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : <div style={{display: "flex", flexDirection: "column"}}><div style={{display: "flex", justifyContent: "center"}}><h2>No article by that name found</h2></div><div style={{display: "flex", justifyContent: "center"}}>Click "+ New Article" under a sidebar heading to write one!</div></div>}
               {this.state.moderator && this.state.showEdits ? (
                 <div>
                   {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <button onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</button> : null}
@@ -172,7 +169,6 @@ class Article extends React.Component {
             gotContents: true,
           })
         } else {
-          console.log(json.articles, "**********")
           this.setState({
             headings: json.headings,
             articles: json.articles,
