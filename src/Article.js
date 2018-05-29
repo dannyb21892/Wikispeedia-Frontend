@@ -1,6 +1,7 @@
 import React from "react"
 import MDE from "./MDE"
 import Sidebar from "./Sidebar"
+import { Button, Divider, Input } from "semantic-ui-react"
 
 class Article extends React.Component {
   state={
@@ -22,6 +23,7 @@ class Article extends React.Component {
     showEdits: false,
     gotContents: false,
     noArticle: false,
+    home_edits: false
   }
 
   editArticle = () => {
@@ -41,27 +43,30 @@ class Article extends React.Component {
 
   submitContent = (mdeState) => {
     let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
-    fetch("http://localhost:3000/api/v1/articles",{
-      method: "POST",
-      headers: {
-       'Content-type':'application/json'
-      },
-      body: JSON.stringify({
-        type: this.state.newArticle ? "newArticle" : "updateArticle",
-        content: mdeState.markdown,
-        html_content: mdeState.html,
-        game: this.props.match.params.game,
-        article: this.props.match.params.article,
-        heading: this.state.heading,
-        title: this.state.title,
-        moderator: this.state.moderator,
-        slug: slug
+    if(this.state.title !== ""){
+      fetch("http://localhost:3000/api/v1/articles",{
+        method: "POST",
+        headers: {
+         'Content-type':'application/json'
+        },
+        body: JSON.stringify({
+          type: this.state.newArticle ? "newArticle" : "updateArticle",
+          content: mdeState.markdown,
+          html_content: mdeState.html,
+          game: this.props.match.params.game,
+          article: this.props.match.params.article,
+          heading: this.state.heading,
+          title: this.state.title,
+          moderator: this.state.moderator,
+          slug: slug,
+          home: this.state.home,
+        })
       })
-    })
-    .then(response => response.json())
-    .then(json => {
-        window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.slug}`
-    })
+      .then(response => response.json())
+      .then(json => {
+          window.location.href = window.location.href.split("/").slice(0,5).join("/") + `/${json.slug}`
+      })
+    }
   }
 
   titleChange = (e) => {
@@ -71,9 +76,9 @@ class Article extends React.Component {
   }
 
   changeCurrentEdit = e => {
-    if(e.target.innerText === "<"){
+    if(e.target.innerText === "< Earlier Revision"){
       this.setState({currentEditMods: this.state.currentEditMods-1})
-    } else if (e.target.innerText === ">"){
+    } else if (e.target.innerText === "Later Revision >"){
       this.setState({currentEditMods: this.state.currentEditMods+1})
     }
   }
@@ -124,19 +129,20 @@ class Article extends React.Component {
     if(this.state.editing){
       show = (
         <div>
-          <input value={this.state.title} placeholder="Article Title" onChange={this.titleChange} /><br />
+          <input value={this.state.home ? "home" : this.state.title} style={{display: this.state.home ? "none" : "auto"}} placeholder="Article Title" onChange={this.titleChange} /><br />
           <MDE markdown={this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/>
         </div>
       )
     } else {
         if (!this.state.noArticle){
-          showEditsOrNot = this.state.moderator ? <button onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</button> : null
+          showEditsOrNot = this.state.moderator ? <Button size="small" inverted onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</Button> : null
         }
-        edits = <div>Scroll between revisions of this article:
-                  <button disabled={this.state.currentEditMods === 0} onClick={this.changeCurrentEdit}>{"<"}</button><button disabled={this.state.currentEditMods === this.state.allEdits.length - 1} onClick={this.changeCurrentEdit}>{">"}</button><br />
+        edits = <div>
+                  <Button size="tiny" attached="left" disabled={this.state.currentEditMods === 0} onClick={this.changeCurrentEdit}>{"< Earlier Revision"}</Button><Button size="tiny" attached="right" disabled={this.state.currentEditMods === this.state.allEdits.length - 1} onClick={this.changeCurrentEdit}>{"Later Revision >"}</Button><br />
                   <span>This article revision is {this.state.allEdits[this.state.currentEditMods].status === "pending" ? this.state.allEdits[this.state.currentEditMods].status + " moderator action" : "already " + this.state.allEdits[this.state.currentEditMods].status}</span>
+                  <Divider />
                 </div>
-        let editButton = this.props.loggedIn && !this.state.noArticle && this.state.gotContents && !this.state.editing && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : null
+        let editButton = this.props.loggedIn && !this.state.noArticle && this.state.gotContents && !this.state.editing && !this.state.showEdits ? <Button size="small" inverted onClick={this.editArticle}>Edit</Button> : null
         let articleNotFound = (
           <div style={{display: "flex", flexDirection: "column"}}>
             <div style={{display: "flex", justifyContent: "center"}}>
@@ -150,13 +156,25 @@ class Article extends React.Component {
         if (this.state.noArticle) {
           show = articleNotFound
         } else {
+          let articleContent = null
+          if(this.state.showEdits){
+            articleContent = this.state.allEdits[this.state.currentEditMods].html_content
+          } else {
+            if (this.state.edits[this.state.currentEditPlebs].html_content === "") {
+              articleContent = "<p>This article has no content yet!  " + (this.props.loggedIn ? "Click the Edit button below" : "Log in")  + " to add some.</p>"
+            } else {
+              articleContent = this.state.edits[this.state.currentEditPlebs].html_content
+            }
+          }
           show = <div>
-                  <div dangerouslySetInnerHTML={{ __html: this.state.showEdits ? this.state.allEdits[this.state.currentEditMods].html_content : this.state.edits[this.state.currentEditPlebs].html_content}} />
+                  <div dangerouslySetInnerHTML={{ __html: articleContent}} />
+                  <Divider />
                   {editButton}
                   {this.state.moderator && this.state.showEdits ? (
                     <div>
-                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <button onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</button> : null}
-                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <button onClick={()=> this.approveOrRejectEdit("rejected")}>Reject this revision</button> : null}
+
+                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <Button positive onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</Button> : null}
+                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <Button negative onClick={()=> this.approveOrRejectEdit("rejected")}>Reject this revision</Button> : null}
                     </div>
                   ) : null}
                 </div>
@@ -166,9 +184,9 @@ class Article extends React.Component {
     let follow = null
     if (this.props.loggedIn){
       if (this.state.follower){
-        follow = <button onClick={() => this.followToggle(false)}>Unfollow this game</button>
+        follow = <Button inverted color="red" onClick={() => this.followToggle(false)}>Unfollow this game</Button>
       } else {
-        follow = <button onClick={() => this.followToggle(true)}>Follow for edit notifications</button>
+        follow = <Button inverted color="green" onClick={() => this.followToggle(true)}>Follow for edit notifications</Button>
       }
     }
 
@@ -176,7 +194,7 @@ class Article extends React.Component {
       <div className="contentWrapper">
         <div className="sidebarAndGame">
           <div className="gameWrapper">
-            <h1>{this.state.game.title}</h1>
+            <h1><a href={`${window.location.href.split("/").slice(0,5).join("/")}/home`}>{this.state.game.title}</a></h1>
             <p>Released: {this.state.game.release_year}</p>
             {follow}
           </div>
@@ -187,6 +205,7 @@ class Article extends React.Component {
         <div className="main">
           {this.state.showEdits ? edits : null}
           {show}
+          <br />
           {showEditsOrNot}
         </div>
       </div>
@@ -214,7 +233,7 @@ class Article extends React.Component {
           this.setState({
             markdown: json.markdown,
             html: json.html.replace("↵",""),
-            title: json.title,
+            title: json.home ? "home" : json.title,
             headings: json.headings,
             heading: json.heading,
             articles: json.articles,
@@ -226,6 +245,7 @@ class Article extends React.Component {
             moderator: json.moderator,
             follower: json.follower,
             gotContents: true,
+            home: json.home
           })
         } else {
           this.setState({

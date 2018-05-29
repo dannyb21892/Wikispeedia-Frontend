@@ -1,10 +1,11 @@
 import React from "react"
+import { Input } from 'semantic-ui-react'
 
 class Signup extends React.Component {
   state = {
     username: "",
     password: "",
-    stayLoggedIn: false
+    stayLoggedIn: true
   }
 
   handleChange = e => {
@@ -54,13 +55,12 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="signup">
         <h3>Sign Up:</h3>
         <form onSubmit={this.handleSubmit}>
-          <label>Username</label>
-          <span>Username: <input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/></span><br/>
-          <span>Password: <input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/></span><br/>
-          <span>Keep Me Logged In <input type="checkbox" name="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/></span><br/>
+          <Input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/><br /><br />
+          <Input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/><br />
+          <span style={{display: "none"}}>Keep Me Logged In <input type="checkbox" name="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/></span><br/>
           <input type="submit" />
         </form>
       </div>

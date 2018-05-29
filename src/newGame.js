@@ -1,5 +1,6 @@
 import React from "react"
 import { Link } from 'react-router-dom'
+import { Step } from "semantic-ui-react"
 
 class NewGame extends React.Component {
   state={
@@ -141,7 +142,7 @@ class NewGame extends React.Component {
         let options = years.map(year => <option key={year} value={year}>{year}</option>)
 
         return (<div className="newGameForm">
-          <h3>Set up a new wiki!</h3>
+          <h2>Set up a new wiki!</h2>
           <h3>Step 1 of 3: Choose a Game</h3>
           <form onSubmit={this.handleSubmit}>
             <p>Game Title: <br/> <input type="text" name="title" value={this.state.title} onChange={this.handleChange} /></p>
@@ -214,6 +215,25 @@ class NewGame extends React.Component {
     let whichSection = this.props.loggedIn ? this.getNewGameSection() : "You must be logged in to start new Wikis!"
     return (
       <div className="newGameContainer">
+        <Step.Group ordered>
+          <Step completed={this.state.progress > 1} active={this.state.progress === 1}>
+            <Step.Content>
+              <Step.Title>Choose Game</Step.Title>
+            </Step.Content>
+          </Step>
+
+          <Step completed={this.state.progress > 2} active={this.state.progress === 2}>
+            <Step.Content>
+              <Step.Title>Add Headings</Step.Title>
+            </Step.Content>
+          </Step>
+
+          <Step completed={this.state.progress > 3} active={this.state.progress === 3}>
+            <Step.Content>
+              <Step.Title>Add Moderators</Step.Title>
+            </Step.Content>
+          </Step>
+        </Step.Group>
         {whichSection}
       </div>
     )

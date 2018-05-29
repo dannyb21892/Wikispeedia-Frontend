@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, Icon, Image, Feed } from 'semantic-ui-react'
+import { Card, Icon, Image, Feed, Header, Divider } from 'semantic-ui-react'
 import edit from "./assets/edit.png"
 import gamepad from "./assets/gamepad-with-joystick (1).png"
 
@@ -17,32 +17,29 @@ class Home extends React.Component {
         {this.state.edits.map((e,i) => {
           return (
           <Feed.Event key={i}>
-            <Feed.Label image={edit} />
+            <Feed.Label>
+              <Icon name="edit" />
+            </Feed.Label>
             <Feed.Content>
               <Feed.Summary>
-                <a href={`${e.url}`}>{e.edit.title}</a>
+                <a href={`${e.url}`}>{e.edit.title}</a><Feed.Date style={{color: "#808389"}}>{e.timestamp}</Feed.Date>
               </Feed.Summary>
+              <Feed.Meta>
+                {e.game}
+              </Feed.Meta>
             </Feed.Content>
           </Feed.Event>
         )})}
       </Feed>
     ) : null
-    let recentEdits = (
-      <Card fluid raised>
-        <Card.Content>
-          <Card.Header>
-            Discover recently updated articles
-          </Card.Header>
-          {editFeed}
-        </Card.Content>
-      </Card>
-    )
     let followFeed = this.state.followers.length > 0 ? (
       <Feed>
         {this.state.followers.map((f,i) => {
           return (
           <Feed.Event key={i}>
-            <Feed.Label image={gamepad} />
+          <Feed.Label>
+            <Icon name="game" />
+          </Feed.Label>
             <Feed.Content>
               <Feed.Summary>
                 <a href={`${f.url}/home`}>{f.game.title}</a>
@@ -52,14 +49,6 @@ class Home extends React.Component {
         )})}
       </Feed>
     ) : null
-    let followers = <Card fluid raised>
-      <Card.Content>
-        <Card.Header>
-          Games you follow
-        </Card.Header>
-        {followFeed}
-      </Card.Content>
-    </Card>
     let topGameFeed = this.state.followers.length > 0 ? (
       <Feed>
         {this.state.games.map((g,i) => {
@@ -75,24 +64,22 @@ class Home extends React.Component {
         )})}
       </Feed>
     ) : null
-    let topGames = <Card fluid raised>
-      <Card.Content>
-        <Card.Header>
-          Most active speedgames
-        </Card.Header>
-        {topGameFeed}
-      </Card.Content>
-    </Card>
     return (
       <div className="home">
         <div className="recentEdits">
-          {recentEdits}
+          <h3>Discover recently updated articles</h3>
+          <Divider />
+          {editFeed}
         </div>
         <div className="followers">
-          {followers}
+          <h3>Games you follow</h3>
+          <Divider />
+          {followFeed}
         </div>
         <div className="topGames">
-          {topGames}
+          <h3>Most active speedgames</h3>
+          <Divider />
+          {topGameFeed}
         </div>
       </div>
     )
