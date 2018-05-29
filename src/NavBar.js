@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, Icon, Image, Feed } from 'semantic-ui-react'
+import { Card, Icon, Image, Feed, Input, Button } from 'semantic-ui-react'
 // https://react.semantic-ui.com/views/card#card-example-content-block
 import icon from "./assets/gamepad-with-joystick (1).png"
 import bell from "./assets/bell (1).png"
@@ -159,12 +159,14 @@ class NavBar extends React.Component {
     let dot = this.state.notifications.length > 0 ? <div style={{backgroundImage:`url(${redDot})`, height:8, width:8}}/> : null
     let bellDiv = this.props.loggedIn ? <li><div className ="notifications" tabIndex={-1} onMouseDown={() => this.setState({showNotifications: !this.state.showNotifications})} onBlur={(e)=>this.handleBlur(e,"notifications")} style={{backgroundImage: `url(${bell})`, width: 24, height: 24, marginTop: -17, marginLeft: -13, position: "absolute", cursor:"pointer"}}>{dot}</div></li> : null
     let notifications = this.state.showNotifications ? this.getNotifications() : null
+    let newGame = this.props.loggedIn ? <li><Button onClick={()=>window.location.href="http://localhost:3001/newGame"} icon labelPosition="right" positive><Icon size="large" name="add circle"/>Start new Wiki</Button></li> : null
     return (
       <header id="header" className="skel-layers-fixed">
 				<h2><a href="/">WikiSpeedia</a></h2>
 				<nav id="nav">
 					<ul>
-						<li><input type="text" placeholder="find a game" value={this.state.search} onChange={this.handleChange} onBlur={(e) => this.handleBlur(e, "search")} onFocus={(e) => this.handleFocus(e, "search")}/></li>
+            {newGame}
+						<li><Input size="mini" icon={<Icon name='search' inverted circular/>} placeholder="find a game" value={this.state.search} onChange={this.handleChange} onBlur={(e) => this.handleBlur(e, "search")} onFocus={(e) => this.handleFocus(e, "search")}/></li>
 						{profile}
             {bellDiv}
 						{logInOrOut}

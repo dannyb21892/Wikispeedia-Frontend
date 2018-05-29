@@ -214,6 +214,9 @@ body {
   margin: 1%;
   max-height: 700px;
   border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
   background-color: #293344;
   overflow: auto;
   padding: 20px;
@@ -229,6 +232,24 @@ body {
 }
 .topGames{
   flex-grow: 1;
+}
+
+.newGameForm{
+  display: flex;
+  margin: 1%;
+  max-height: 700px;
+  max-width: 40%;
+  margin-left: 30%;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  background-color: #293344;
+  overflow: auto;
+  padding: 20px;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4);
+  color: white;
+  flex-direction: column;
 }
 
 /* MDE */

@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from 'react-router-dom'
-import { Step } from "semantic-ui-react"
+import { Step, Divider } from "semantic-ui-react"
 
 class NewGame extends React.Component {
   state={
@@ -141,19 +141,20 @@ class NewGame extends React.Component {
         let years = Array.from(new Array(currentYear-1959), (x,i) => 2018-i)
         let options = years.map(year => <option key={year} value={year}>{year}</option>)
 
-        return (<div className="newGameForm">
-          <h2>Set up a new wiki!</h2>
-          <h3>Step 1 of 3: Choose a Game</h3>
-          <form onSubmit={this.handleSubmit}>
-            <p>Game Title: <br/> <input type="text" name="title" value={this.state.title} onChange={this.handleChange} /></p>
-            <p>Release Year: <br/> <select name="year" options={years} onChange={this.handleChange}>{options}</select></p>
-            <input type="submit" />
-          </form>
-        </div>)
+        return (
+          <div className="newGameForm">
+            <h2>Set up a new wiki!</h2>
+            <h3>Step 1 of 3: Choose a Game</h3>
+            <form onSubmit={this.handleSubmit}>
+              <p>Game Title: <br/> <input type="text" name="title" value={this.state.title} onChange={this.handleChange} /></p>
+              <p>Release Year: <br/> <select name="year" options={years} onChange={this.handleChange}>{options}</select></p>
+              <input type="submit" />
+            </form>
+          </div>)
       case 2:
         let headings = this.state.headings.map(heading=><li key={heading} id={heading} onClick={this.remHeading}>{heading}</li>)
         return (
-        <div>
+        <div className="newGameForm">
           <h3>Set up a new wiki!</h3>
           <h3>Step 2 of 3: Add Article Headings</h3>
           <p>These will be the highest level groupings of related articles. Some defaults have been provided. Click "+" to add your own, or click a heading tag to remove it.</p>
@@ -169,7 +170,7 @@ class NewGame extends React.Component {
       case 3:
         let moderators = this.state.moderators.map(moderator=><li key={moderator} id={moderator} onClick={this.remMod}>{moderator}</li>)
         return (
-          <div>
+          <div className="newGameForm">
             <h3>Set up a new wiki!</h3>
             <h3>Step 3 of 3: Add Moderators</h3>
             <p>Your moderators will be responsible for approving any edits made to the articles in your wiki. You are already a moderator of any wiki you create.</p>
@@ -189,7 +190,7 @@ class NewGame extends React.Component {
         let link = this.props.URL+"games/"+this.state.slug
         let linkto = "games/"+this.state.slug
         return (
-          <div>
+          <div className="newGameForm">
             <h3>Your wiki has been successfully created!</h3>
             <span><strong>Game title: </strong>{this.state.title}</span><br/>
             <span><strong>Released: </strong>{this.state.year}</span><br/>
@@ -234,6 +235,7 @@ class NewGame extends React.Component {
             </Step.Content>
           </Step>
         </Step.Group>
+        <Divider />
         {whichSection}
       </div>
     )
