@@ -185,8 +185,9 @@ body {
 }
 .home > div {
   display: flex;
-  margin: 3%;
-  height: 50%;
+  margin: 1%;
+  height: 100px;
+  overflow: auto;
 }
 .recentEdits{
   flex-grow: 0;
@@ -218,7 +219,7 @@ body {
   margin: 10px;
 }
 .main {
-  flex-grow: 1;
+  flex-basis: 80%;
   background-color: #293344;
   color: white;
   border: 2px solid black;
@@ -230,7 +231,8 @@ body {
 .sidebarAndGame{
   display: flex;
   flex-direction: column;
-  width: 20%;
+  flex-basis: 20%;
+  margin-left: 5%;
 }
 .gameWrapper{
   background-color: #293344;
