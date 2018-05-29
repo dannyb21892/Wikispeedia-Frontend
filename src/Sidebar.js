@@ -61,22 +61,20 @@ class Sidebar extends React.Component {
       </div>]
 
       return  <div>
-                  <div key={i} name={i} className={"navHeader"+headerType} onClick={(e) => this.expand(e,i)}>
-                    <h4 name={i}>{h.name}</h4>
-                  </div>
+                <div key={i} name={i} className={"navHeader"+headerType} onClick={(e) => this.expand(e,i)}>
+                  <h4 name={i}>{h.name}</h4>
+                </div>
                 {articles}
               </div>
     })
-    return (
-          cards
-    )
+    return cards
   }
   componentDidUpdate() {
     if(!this.state.updated && this.props.info.headings.length > 0){
       let expanded = {}
       this.props.info.headings.forEach((h,i)=>{
-        let articles = this.props.info.articles[i].map(a => a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_"))
-        expanded[i] = articles[i] ? articles[i].toLowerCase() === window.location.href.split("/")[5].toLowerCase() : false
+        let articles = this.props.info.articles[i].map(a => a.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_").toLowerCase())
+        expanded[i] = articles.includes(window.location.href.split("/")[5].toLowerCase())
       })
       this.setState({
         expanded: expanded,

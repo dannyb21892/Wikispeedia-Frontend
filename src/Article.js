@@ -17,6 +17,7 @@ class Article extends React.Component {
     allEdits: [{html_content: "", content: "", title: "", status: ""}],
     currentEditMods: 0,
     currentEditPlebs: 0,
+    follower: false,
     moderator: false,
     showEdits: false,
     gotContents: false
@@ -92,6 +93,29 @@ class Article extends React.Component {
     })
   }
 
+  followToggle = (type) => {
+    let user = this.props.loggedIn ? localStorage.getItem("username") : null
+    fetch("http://localhost:3000/api/v1/followers",{
+      method: "POST",
+      headers: {
+       'Content-type':'application/json'
+      },
+      body: JSON.stringify({
+        type: type ? "addFollower" : "remFollower",
+        game: this.state.game.id,
+        username: user
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+      if(json.success){
+        this.setState({
+          follower: !this.state.follower
+        })
+      }
+    })
+  }
+
   render() {
     let show
     let showEditsOrNot = null
@@ -120,10 +144,26 @@ class Article extends React.Component {
               ) : null}
             </div>
     }
+    let follow = null
+    if (this.props.loggedIn){
+      if (this.state.follower){
+        follow = <button onClick={() => this.followToggle(false)}>Unfollow this game</button>
+      } else {
+        follow = <button onClick={() => this.followToggle(true)}>Follow for edit notifications</button>
+      }
+    }
+
     return (
       <div className="contentWrapper">
-        <div className="sidebarWrapper">
-          <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
+        <div className="sidebarAndGame">
+          <div className="gameWrapper">
+            <h1>{this.state.game.title}</h1>
+            <p>Released: {this.state.game.release_year}</p>
+            {follow}
+          </div>
+          <div className="sidebarWrapper">
+            <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
+          </div>
         </div>
         <div className="main">
           {showEditsOrNot}
@@ -134,7 +174,7 @@ class Article extends React.Component {
     )
   }
 
-  componentDidUpdate(){
+  componentDidMount(){
     if(!this.state.gotContents){
       let user = this.props.loggedIn ? localStorage.getItem("username") : null
       fetch("http://localhost:3000/api/v1/articles",{
@@ -166,6 +206,7 @@ class Article extends React.Component {
             currentEditPlebs: json.approvedEdits.length > 0 ? json.approvedEdits.length-1 : this.state.currentEditPlebs,
             game: json.game,
             moderator: json.moderator,
+            follower: json.follower,
             gotContents: true,
           })
         } else {
@@ -173,6 +214,8 @@ class Article extends React.Component {
             headings: json.headings,
             articles: json.articles,
             game: json.game,
+            moderator: json.moderator,
+            follower: json.follower,
             gotContents: true
           })
         }

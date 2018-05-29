@@ -49,6 +49,7 @@ class Game extends React.Component {
   }
 
   componentDidMount(){
+    console.log(this.props.match.params.game)
     fetch(`http://localhost:3000/api/v1/games/${this.props.match.params.game}`)
     .then(response=>response.json())
     .then(json=>{
