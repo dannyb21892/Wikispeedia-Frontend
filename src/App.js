@@ -73,8 +73,8 @@ class App extends Component {
           return <Home />//<a href="http://localhost:3001/games">Games List</a>
         } else {
           window.location.href = "http://localhost:3001/login"
+          break
         }
-
       case "AuthContainer":
         return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       case "MDE":
@@ -84,7 +84,9 @@ class App extends Component {
       case "gamesContainer":
         return <GamesContainer />
       case "game":
-        return <Game loggedIn={this.state.loggedIn} {...props}/>
+        window.location.href = window.location.href + (window.location.href.slice(-1) === "/" ? null : "/") + "home"
+        break
+        //return <Game loggedIn={this.state.loggedIn} {...props}/>
       case "article":
         return <Article checkedLogin={this.state.checkedLogin} loggedIn={this.state.loggedIn} {...props}/>
       default:

@@ -216,10 +216,11 @@ body {
   align-items: flex-start;
 }
 .contentWrapper > div {
-  margin: 10px;
+  margin-left: 15px;
 }
 .main {
   flex-basis: 80%;
+  max-width: 77%;
   background-color: #293344;
   color: white;
   border: 2px solid black;

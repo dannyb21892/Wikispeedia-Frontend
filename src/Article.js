@@ -20,7 +20,8 @@ class Article extends React.Component {
     follower: false,
     moderator: false,
     showEdits: false,
-    gotContents: false
+    gotContents: false,
+    noArticle: false,
   }
 
   editArticle = () => {
@@ -128,22 +129,40 @@ class Article extends React.Component {
         </div>
       )
     } else {
-      showEditsOrNot = this.state.moderator ? <button onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</button> : null
-      edits = <div>Scroll between revisions of this article:
-                <button disabled={this.state.currentEditMods === 0} onClick={this.changeCurrentEdit}>{"<"}</button><button disabled={this.state.currentEditMods === this.state.allEdits.length - 1} onClick={this.changeCurrentEdit}>{">"}</button><br />
-                <span>This article revision is {this.state.allEdits[this.state.currentEditMods].status === "pending" ? this.state.allEdits[this.state.currentEditMods].status + " moderator action" : "already " + this.state.allEdits[this.state.currentEditMods].status}</span>
-              </div>
-      show = <div>
-              <div dangerouslySetInnerHTML={{ __html: this.state.showEdits ? this.state.allEdits[this.state.currentEditMods].html_content : this.state.edits[this.state.currentEditPlebs].html_content}} />
-              {this.props.loggedIn && this.state.edits[this.state.currentEditPlebs].html_content !== "" && this.state.currentEditPlebs === this.state.edits.length-1 && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : <div style={{display: "flex", flexDirection: "column"}}><div style={{display: "flex", justifyContent: "center"}}><h2>No article by that name found</h2></div><div style={{display: "flex", justifyContent: "center"}}>Click "+ New Article" under a sidebar heading to write one!</div></div>}
-              {this.state.moderator && this.state.showEdits ? (
-                <div>
-                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <button onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</button> : null}
-                  {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <button onClick={()=> this.approveOrRejectEdit("rejected")}>Reject this revision</button> : null}
+        if (!this.state.noArticle){
+          showEditsOrNot = this.state.moderator ? <button onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</button> : null
+        }
+        edits = <div>Scroll between revisions of this article:
+                  <button disabled={this.state.currentEditMods === 0} onClick={this.changeCurrentEdit}>{"<"}</button><button disabled={this.state.currentEditMods === this.state.allEdits.length - 1} onClick={this.changeCurrentEdit}>{">"}</button><br />
+                  <span>This article revision is {this.state.allEdits[this.state.currentEditMods].status === "pending" ? this.state.allEdits[this.state.currentEditMods].status + " moderator action" : "already " + this.state.allEdits[this.state.currentEditMods].status}</span>
                 </div>
-              ) : null}
+        let editButton = this.props.loggedIn && !this.state.noArticle && this.state.gotContents && !this.state.editing && !this.state.showEdits ? <button onClick={this.editArticle}>Edit</button> : null
+        let articleNotFound = (
+          <div style={{display: "flex", flexDirection: "column"}}>
+            <div style={{display: "flex", justifyContent: "center"}}>
+              <h2>No article by that name found</h2>
             </div>
+            <div style={{display: "flex", justifyContent: "center"}}>
+              Click "+ New Article" under a sidebar heading to write one!
+            </div>
+          </div>
+        )
+        if (this.state.noArticle) {
+          show = articleNotFound
+        } else {
+          show = <div>
+                  <div dangerouslySetInnerHTML={{ __html: this.state.showEdits ? this.state.allEdits[this.state.currentEditMods].html_content : this.state.edits[this.state.currentEditPlebs].html_content}} />
+                  {editButton}
+                  {this.state.moderator && this.state.showEdits ? (
+                    <div>
+                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "rejected" ? <button onClick={() => this.approveOrRejectEdit("approved")}>Approve this revision</button> : null}
+                      {this.state.allEdits[this.state.currentEditMods].status === "pending" || this.state.allEdits[this.state.currentEditMods].status === "approved" ? <button onClick={()=> this.approveOrRejectEdit("rejected")}>Reject this revision</button> : null}
+                    </div>
+                  ) : null}
+                </div>
+        }
     }
+
     let follow = null
     if (this.props.loggedIn){
       if (this.state.follower){
@@ -166,9 +185,9 @@ class Article extends React.Component {
           </div>
         </div>
         <div className="main">
-          {showEditsOrNot}
           {this.state.showEdits ? edits : null}
           {show}
+          {showEditsOrNot}
         </div>
       </div>
     )
@@ -191,7 +210,6 @@ class Article extends React.Component {
       })
       .then(response => response.json())
       .then(json => {
-        console.log(json)
         if(json.success){
           this.setState({
             markdown: json.markdown,
@@ -216,7 +234,8 @@ class Article extends React.Component {
             game: json.game,
             moderator: json.moderator,
             follower: json.follower,
-            gotContents: true
+            gotContents: true,
+            noArticle: true,
           })
         }
       })

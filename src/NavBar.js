@@ -57,7 +57,7 @@ class NavBar extends React.Component {
             <Feed.Label image={icon} />
             <Feed.Content>
               <Feed.Summary>
-                <a href={`http://localhost:3001/games/${r.game.slug.name}`}>{r.game.title}</a>
+                <a href={`http://localhost:3001/games/${r.game.slug.name}/home`}>{r.game.title}</a>
               </Feed.Summary>
             </Feed.Content>
           </Feed.Event>
@@ -73,7 +73,7 @@ class NavBar extends React.Component {
             <Feed.Label image={icon} />
             <Feed.Content>
               <Feed.Summary>
-                <a href={`http://localhost:3001/games/${r.suggestions.slugs[i].name}`}>{g.title}</a>
+                <a href={`http://localhost:3001/games/${r.suggestions.slugs[i].name}/home`}>{g.title}</a>
               </Feed.Summary>
             </Feed.Content>
           </Feed.Event>
