@@ -14,6 +14,7 @@ class Signup extends React.Component {
         stayLoggedIn: !this.state.stayLoggedIn
       })
     } else {
+      if ((e.target.name === "password") || (e.target.name === "username" && "1234567890-_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM".includes(e.target.value.slice(-1)) ))
       this.setState({
         [e.target.name]: e.target.value
       })
@@ -58,7 +59,7 @@ class Signup extends React.Component {
       <div className="signup">
         <h3>Sign Up:</h3>
         <form onSubmit={this.handleSubmit}>
-          <Input type="text" name="username" value={this.state.username} placeholder="username"  onChange={this.handleChange}/><br /><br />
+          <Input type="text" name="username" value={this.state.username.split("").filter(a=>"1234567890-_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM".includes(a)).join("")} placeholder="username"  onChange={this.handleChange}/><br /><br />
           <Input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/><br />
           <span style={{display: "none"}}>Keep Me Logged In <input type="checkbox" name="stayLoggedIn" checked={this.state.stayLoggedIn} value={this.state.stayLoggedIn} onChange={this.handleChange}/></span><br/>
           <input type="submit" />

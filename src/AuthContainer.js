@@ -1,6 +1,6 @@
 import React from "react"
 import Login from "./Login"
-import Logout from "./Logout"
+// import Logout from "./Logout"
 import Signup from "./Signup"
 import { Divider } from "semantic-ui-react"
 

@@ -243,6 +243,33 @@ body {
   flex-grow: 1;
 }
 
+/* User Page */
+.userPageContainer {
+  display: flex;
+  flex-direction: row;
+}
+.userPageContainer > div {
+  display: flex;
+  margin: 1%;
+  max-height: 700px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  background-color: #293344;
+  overflow: auto;
+  padding: 20px;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4);
+  color: white;
+  flex-direction: column;
+}
+.recentEdits{
+  flex-grow: 0;
+}
+.userSettingsContainer{
+  flex-grow: 1;
+}
+/* New Game Page */
 .newGameForm{
   display: flex;
   margin: 1%;

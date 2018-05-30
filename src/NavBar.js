@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, Icon, Image, Feed, Input, Button } from 'semantic-ui-react'
+import { Card, Icon, Feed, Input, Button } from 'semantic-ui-react'
 // https://react.semantic-ui.com/views/card#card-example-content-block
 import icon from "./assets/gamepad-with-joystick (1).png"
 import bell from "./assets/bell (1).png"

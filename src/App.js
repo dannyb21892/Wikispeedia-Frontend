@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import AuthContainer from "./AuthContainer"
-import MDE from "./MDE"
+// import MDE from "./MDE"
 import NewGame from "./newGame"
-import Game from "./Game"
-import GamesContainer from "./GamesContainer"
+// import Game from "./Game"
+// import GamesContainer from "./GamesContainer"
 import NavBar from "./NavBar"
 import Article from "./Article"
 import Home from "./Home"
+import User from "./User"
 import './App.css';
 import Rodal from 'rodal';
 // https://github.com/chenjiahan/rodal
@@ -79,20 +80,22 @@ class App extends Component {
           window.location.href = "http://localhost:3001/login"
           break
         }
-      case "AuthContainer":
-        return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
-      case "MDE":
-        return <MDE />
+      // case "AuthContainer":
+      //   return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
+      // case "MDE":
+      //   return <MDE />
       case "newGame":
         return <NewGame loggedIn={this.state.loggedIn } URL={this.props.URL}/>
-      case "gamesContainer":
-        return <GamesContainer />
+      // case "gamesContainer":
+      //   return <GamesContainer />
       case "game":
         window.location.href = window.location.href + (window.location.href.slice(-1) === "/" ? null : "/") + "home"
         break
         //return <Game loggedIn={this.state.loggedIn} {...props}/>
       case "article":
         return <Article checkedLogin={this.state.checkedLogin} loggedIn={this.state.loggedIn} {...props}/>
+      case "user":
+        return <User loggedIn={this.state.loggedIn} {...props} username={this.state.username} logout={this.logout}/>
       default:
         return null
     }
@@ -109,7 +112,9 @@ class App extends Component {
     })
   }
 
-
+  // <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
+  // <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
+  // <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
   render() {
     if (this.state.checkedLogin){
       return (
@@ -118,13 +123,10 @@ class App extends Component {
           <Router>
             <div className="Routes" >
               <Route exact strict path="/" render={()=>this.createRouteComponent("home")} />
-              <Route exact path="/login" render={()=>this.createRouteComponent("AuthContainer")} />
-              <Route exact path="/MDE" render={()=>this.createRouteComponent("MDE")} />
               <Route exact path="/newgame" render={()=>this.createRouteComponent("newGame")} />
-              <Route exact path="/games" render={()=>this.createRouteComponent("gamesContainer")} />
               <Route exact path={`/games/:game`} render={(props)=>this.createRouteComponent("game",props)} />
               <Route path={`/games/:game/:article`} render={(props)=>this.createRouteComponent("article", props)}/>
-
+              <Route path={`/users/:user`} render={(props)=>this.createRouteComponent("user", props)}/>
             </div>
           </Router>
           <Rodal visible={this.state.popup} onClose={this.hideLogin} width={500} height={500} customStyles={{backgroundColor: "#293344", borderColor: "black", borderStyle: "solid", borderWidth: "1px", boxShadow: "0px 5px 10px 3px rgba(0,0,0,0.6)", borderRadius: "10px"}}>

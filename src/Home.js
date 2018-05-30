@@ -1,6 +1,6 @@
 import React from "react"
-import { Card, Icon, Image, Feed, Header, Divider } from 'semantic-ui-react'
-import edit from "./assets/edit.png"
+import { Icon, Feed, Divider } from 'semantic-ui-react'
+// import edit from "./assets/edit.png"
 import gamepad from "./assets/gamepad-with-joystick (1).png"
 
 

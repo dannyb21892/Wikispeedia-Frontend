@@ -1,7 +1,8 @@
 import React from "react"
 import MDE from "./MDE"
 import Sidebar from "./Sidebar"
-import { Button, Divider, Input } from "semantic-ui-react"
+import { Button, Divider } from "semantic-ui-react"
+// import { Input } from "semantic-ui-react"
 
 class Article extends React.Component {
   state={
@@ -58,6 +59,7 @@ class Article extends React.Component {
           heading: this.state.heading,
           title: this.state.title,
           moderator: this.state.moderator,
+          user: localStorage.getItem("username"),
           slug: slug,
           home: this.state.home,
         })
