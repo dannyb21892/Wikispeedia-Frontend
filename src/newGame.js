@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from 'react-router-dom'
-import { Step, Divider } from "semantic-ui-react"
+import { Step, Divider, Button, List } from "semantic-ui-react"
 
 class NewGame extends React.Component {
   state={
@@ -22,9 +22,12 @@ class NewGame extends React.Component {
 
   addHeading = e => {
     e.preventDefault()
-    this.setState({
-      headings: [...this.state.headings, this.state.currentHeading]
-    })
+    if(!this.state.headings.map(h=>h.toLowerCase()).includes(this.state.currentHeading.toLowerCase())){
+      this.setState({
+        headings: [...this.state.headings, this.state.currentHeading],
+        currentHeading: ""
+      })
+    }
   }
 
   remHeading = e => {
@@ -54,7 +57,8 @@ class NewGame extends React.Component {
           console.log("You are already a moderator of the wiki you are making")
         } else {
           this.setState({
-            moderators: [...this.state.moderators, this.state.currentModerator]
+            moderators: [...this.state.moderators, this.state.currentModerator],
+            currentModerator: ""
           })
         }
       }
@@ -152,23 +156,23 @@ class NewGame extends React.Component {
             </form>
           </div>)
       case 2:
-        let headings = this.state.headings.map(heading=><li key={heading} id={heading} onClick={this.remHeading}>{heading}</li>)
+        let headings = this.state.headings.map(heading=><div className={"newGameHeading"}><Button fluid inverted icon="remove" key={heading} id={heading} onClick={this.remHeading}>{heading}</Button></div>)
         return (
         <div className="newGameForm">
           <h3>Set up a new wiki!</h3>
           <h3>Step 2 of 3: Add Article Headings</h3>
           <p>These will be the highest level groupings of related articles. Some defaults have been provided. Click "+" to add your own, or click a heading tag to remove it.</p>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} style={{margin: 10}}>
             <input type="text" name="currentHeading" value={this.state.currentHeading} onChange={this.handleChange} />
             <button onClick={this.addHeading}>+</button>
-            <input type="submit" />
-            <ul>
-              {headings}
-            </ul>
+            <input type="submit" /><br />
           </form>
+          <div style={{display: "flex", flexWrap: "wrap", flexDirection: "row"}}>
+            {headings}
+          </div>
         </div>)
       case 3:
-        let moderators = this.state.moderators.map(moderator=><li key={moderator} id={moderator} onClick={this.remMod}>{moderator}</li>)
+        let moderators = this.state.moderators.map(moderator=><div className={"newGameHeading"}><Button fluid inverted icon="remove" key={moderator} id={moderator} onClick={this.remMod}>{moderator}</Button></div>)
         return (
           <div className="newGameForm">
             <h3>Set up a new wiki!</h3>
@@ -178,24 +182,26 @@ class NewGame extends React.Component {
               <input type="text" name="currentModerator" value={this.state.currentModerator} onChange={this.handleChange} />
               <button onClick={this.addMod}>+</button>
               <input type="submit" />
-              <ul>
-                {moderators}
-              </ul>
             </form>
+            <div style={{display: "flex", flexWrap: "wrap", flexDirection: "row"}}>
+              {moderators}
+            </div>
           </div>
         )
       case 4:
-        moderators = [...this.state.moderators, localStorage.getItem("username")].map(moderator=><li key={moderator} id={moderator}>{moderator}</li>)
-        headings = this.state.headings.map(heading=><li key={heading} id={heading}>{heading}</li>)
+        moderators = [...this.state.moderators, localStorage.getItem("username")].map(moderator=><List.Item key={moderator} id={moderator}><List.Content><List.Header>{moderator}</List.Header></List.Content></List.Item>)
+        headings = this.state.headings.map(heading=><List.Item key={heading} id={heading}><List.Content><List.Header>{heading}</List.Header></List.Content></List.Item>)
         let link = this.props.URL+"games/"+this.state.slug
         let linkto = "games/"+this.state.slug
         return (
           <div className="newGameForm">
-            <h3>Your wiki has been successfully created!</h3>
-            <span><strong>Game title: </strong>{this.state.title}</span><br/>
+            <h2>Your wiki has been successfully created!</h2>
+            <h3>Game title: {this.state.title}</h3><br/>
             <span><strong>Released: </strong>{this.state.year}</span><br/>
-            <span><strong>Article Headings: </strong><ul>{headings}</ul></span><br/>
-            <span><strong>Moderators: </strong><ul>{moderators}</ul></span><br /><br />
+            <div style={{display: "flex", flexDirection: "row", justifyContent:"center"}}>
+              <div style={{display: "flex", flexDirection: "column", flexGrow: 0, marginRight: 30}}><h4>Article Headings: </h4><List divided inverted relaxed>{headings}</List></div>
+              <div style={{display: "flex", flexDirection: "column", flexGrow: 0, marginLeft: 30}}><h4>Moderators: </h4><List divided inverted relaxed>{moderators}</List></div>
+            </div><br /><br />
             <span>Your game can be found at the following link: <Link to={linkto}>{link}</Link></span>
           </div>
         )

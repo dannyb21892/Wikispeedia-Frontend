@@ -38,7 +38,7 @@ class Signup extends React.Component {
     .then(json=>{
       console.log(json)
       if(json.logged_in){
-
+        this.props.hideLogin()
         if (this.state.stayLoggedIn) {
           localStorage.setItem("username", this.state.username)
           localStorage.setItem("pd", json.auth)

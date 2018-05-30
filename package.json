@@ -10,6 +10,7 @@
     "react-scripts": "1.1.4",
     "react-sidenav": "^2.1.3",
     "react-simplemde-editor": "^3.6.14",
+    "rodal": "^1.6.3",
     "showdown": "^1.8.6",
     "simplemde": "^1.11.2"
   },

@@ -5,8 +5,8 @@ import Signup from "./Signup"
 import { Divider } from "semantic-ui-react"
 
 const AuthContainer = props => {
-  let loginout = props.loggedIn ? <Logout logout={props.logout} username={props.username}/> : <Login logIn={props.logIn}/>
-  let signup = props.loggedIn ? null : <Signup logIn={props.logIn}/>
+  let loginout = props.loggedIn ? null : <Login hideLogin={props.hideLogin} logIn={props.logIn}/>
+  let signup = props.loggedIn ? null : <Signup hideLogin={props.hideLogin} logIn={props.logIn}/>
   return (
     <div className="AuthContainer">
       {loginout}

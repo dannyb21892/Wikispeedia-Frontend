@@ -10,12 +10,16 @@ import NavBar from "./NavBar"
 import Article from "./Article"
 import Home from "./Home"
 import './App.css';
+import Rodal from 'rodal';
+// https://github.com/chenjiahan/rodal
+import 'rodal/lib/rodal.css';
 
 class App extends Component {
   state = {
     loggedIn: false,
     username: "",
-    checkedLogin: false
+    checkedLogin: false,
+    popup: false
   }
 
   autoLogin = () => {
@@ -94,11 +98,23 @@ class App extends Component {
     }
   }
 
+  showLogin = () => {
+    this.setState({
+      popup: true
+    })
+  }
+  hideLogin = () => {
+    this.setState({
+      popup: false
+    })
+  }
+
+
   render() {
     if (this.state.checkedLogin){
       return (
         <div className="App">
-          <NavBar loggedIn={this.state.loggedIn} logout={this.logout}/>
+          <NavBar loggedIn={this.state.loggedIn} showLogin={this.showLogin} logout={this.logout}/>
           <Router>
             <div className="Routes" >
               <Route exact strict path="/" render={()=>this.createRouteComponent("home")} />
@@ -111,6 +127,9 @@ class App extends Component {
 
             </div>
           </Router>
+          <Rodal visible={this.state.popup} onClose={this.hideLogin} width={500} height={500} customStyles={{backgroundColor: "#293344", borderColor: "black", borderStyle: "solid", borderWidth: "1px", boxShadow: "0px 5px 10px 3px rgba(0,0,0,0.6)", borderRadius: "10px"}}>
+            <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn} hideLogin={this.hideLogin}/>
+          </Rodal>
         </div>
       )
     } else {return null}
