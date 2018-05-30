@@ -8,6 +8,7 @@ class Article extends React.Component {
   state={
     editing: this.props.editing || false,
     markdown: "",
+    newContent: "",
     html: "",
     title: "",
     headings: [],
@@ -38,7 +39,8 @@ class Article extends React.Component {
     this.setState({
       editing: true,
       newArticle: true,
-      heading: heading.name
+      heading: heading.name,
+      newContent: ""
     })
   }
 
@@ -129,10 +131,16 @@ class Article extends React.Component {
     let showEditsOrNot = null
     let edits=null
     if(this.state.editing){
+      let title = this.state.home ? "home" : this.state.title
+      let titleDisplay = this.state.home ? "none" : "auto"
+      if(this.state.newArticle){
+        title = ""
+        titleDisplay = "auto"
+      }
       show = (
         <div>
-          <input value={this.state.home ? "home" : this.state.title} style={{display: this.state.home ? "none" : "auto"}} placeholder="Article Title" onChange={this.titleChange} /><br />
-          <MDE markdown={this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/>
+          <input value={title} style={{display: titleDisplay}} placeholder="Article Title" onChange={this.titleChange} /><br />
+          <MDE markdown={this.state.newArticle ? this.state.newContent : this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/>
         </div>
       )
     } else {

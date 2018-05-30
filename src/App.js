@@ -74,12 +74,12 @@ class App extends Component {
   createRouteComponent = (type, props) => {
     switch (type) {
       case "home":
-        if (this.state.loggedIn) {
-          return <Home />//<a href="http://localhost:3001/games">Games List</a>
-        } else {
-          window.location.href = "http://localhost:3001/login"
-          break
-        }
+        // if (this.state.loggedIn) {
+          return <Home loggedIn={this.state.loggedIn}/>//<a href="http://localhost:3001/games">Games List</a>
+        // } else {
+        //   window.location.href = "http://localhost:3001/login"
+        //   break
+        // }
       // case "AuthContainer":
       //   return <AuthContainer loggedIn={this.state.loggedIn} username={this.state.username} logout={this.logout} logIn={this.logIn}/>
       // case "MDE":

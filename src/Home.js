@@ -49,7 +49,7 @@ class Home extends React.Component {
         )})}
       </Feed>
     ) : null
-    let topGameFeed = this.state.followers.length > 0 ? (
+    let topGameFeed = this.state.games.length > 0 ? (
       <Feed>
         {this.state.games.map((g,i) => {
           return (
@@ -71,7 +71,7 @@ class Home extends React.Component {
           <Divider />
           {editFeed}
         </div>
-        <div className="followers">
+        <div style={{display: this.props.loggedIn ? "intial" : "none"}} className="followers">
           <h3>Games you follow</h3>
           <Divider />
           {followFeed}
@@ -95,15 +95,17 @@ class Home extends React.Component {
         })
       }
     })
-    fetch(`http://localhost:3000/api/v1/followers/${localStorage.getItem("username")}`)
-    .then(response=>response.json())
-    .then(json=>{
-      if (json.success){
-        this.setState({
-          followers: json.followers
-        })
-      }
-    })
+    if(this.props.loggedIn){
+      fetch(`http://localhost:3000/api/v1/followers/${localStorage.getItem("username")}`)
+      .then(response=>response.json())
+      .then(json=>{
+        if (json.success){
+          this.setState({
+            followers: json.followers
+          })
+        }
+      })
+    }
     fetch(`http://localhost:3000/api/v1/games`,{
       method: "POST",
       headers: {
