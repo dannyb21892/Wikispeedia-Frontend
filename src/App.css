@@ -235,12 +235,15 @@ body {
 }
 .recentEdits{
   flex-grow: 0;
+  max-width: 30%;
 }
 .followers{
   flex-grow: 1;
+  max-width: 35%;
 }
 .topGames{
   flex-grow: 1;
+  max-width: 35%;
 }
 
 /* User Page */
@@ -291,8 +294,7 @@ body {
 /* MDE */
 
 .react-mde {
-  width: 75%;
-  margin-left: 12.5%;
+  width: 100%;
 }
 .react-mde-content {
   background-color: white;
@@ -306,6 +308,8 @@ body {
 }
 .contentWrapper > div {
   margin-left: 15px;
+  display: flex;
+  flex-direction: column;
 }
 .main {
   flex-basis: 80%;
@@ -318,11 +322,20 @@ body {
   text-align: left;
   box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4)
 }
+.newArticle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.newTitle{
+  justify-content: center;
+}
 .sidebarAndGame{
   display: flex;
   flex-direction: column;
   flex-basis: 20%;
   margin-left: 5%;
+  max-width: 20%;
 }
 .gameWrapper{
   background-color: #293344;
@@ -332,16 +345,18 @@ body {
   width: 100%;
   height: auto;
   margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4)
+  padding: 10px;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4);
 }
+.titleWrapper{
+  overflow-x: hidden;
+}
+
 .sidebarWrapper {
   background-color: #293344;
   border-radius: 10px;
   border: black 2px solid;
   width: 100%;
-  padding-bottom: 15px;
   box-shadow: 0px 5px 10px 2px rgba(0,0,0,0.4)
 }
 .navHeader {
@@ -361,7 +376,18 @@ body {
   border-top: black 0px solid;
   border-top-left-radius: 10px;
 }
-.navHeader.last>div.article.last{
+.navHeader.last{
+  border-bottom-right-radius: 10px;
+  border-bottom: black 0px solid;
+  border-bottom-left-radius: 10px;
+  transition: border-radius 0.25s linear;
+}
+.navHeader.last.expanded{
+  border-bottom-right-radius: 0px;
+  border-bottom: black 1px solid;
+  border-bottom-left-radius: 0px;
+}
+.article.expanded.last{
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }

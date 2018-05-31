@@ -1,7 +1,7 @@
 import React from "react"
 import MDE from "./MDE"
 import Sidebar from "./Sidebar"
-import { Button, Divider } from "semantic-ui-react"
+import { Button, Divider, Input } from "semantic-ui-react"
 // import { Input } from "semantic-ui-react"
 
 class Article extends React.Component {
@@ -9,6 +9,7 @@ class Article extends React.Component {
     editing: this.props.editing || false,
     markdown: "",
     newContent: "",
+    newTitle: "",
     html: "",
     title: "",
     headings: [],
@@ -40,13 +41,15 @@ class Article extends React.Component {
       editing: true,
       newArticle: true,
       heading: heading.name,
-      newContent: ""
+      newContent: "",
+      newTitle: ""
     })
   }
 
   submitContent = (mdeState) => {
-    let slug = this.state.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
-    if(this.state.title !== ""){
+    let title = this.state.newArticle ? this.state.newTitle : this.state.title
+    let slug = title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")
+    if(title !== ""){
       fetch("http://localhost:3000/api/v1/articles",{
         method: "POST",
         headers: {
@@ -59,7 +62,7 @@ class Article extends React.Component {
           game: this.props.match.params.game,
           article: this.props.match.params.article,
           heading: this.state.heading,
-          title: this.state.title,
+          title: title,
           moderator: this.state.moderator,
           user: localStorage.getItem("username"),
           slug: slug,
@@ -74,9 +77,15 @@ class Article extends React.Component {
   }
 
   titleChange = (e) => {
-    this.setState({
-      title: e.target.value
-    })
+    if(this.state.newArticle){
+      this.setState({
+        newTitle: e.target.value
+      })
+    } else {
+      this.setState({
+        title: e.target.value
+      })
+    }
   }
 
   changeCurrentEdit = e => {
@@ -134,18 +143,18 @@ class Article extends React.Component {
       let title = this.state.home ? "home" : this.state.title
       let titleDisplay = this.state.home ? "none" : "auto"
       if(this.state.newArticle){
-        title = ""
+        title = this.state.newTitle
         titleDisplay = "auto"
       }
       show = (
-        <div>
-          <input value={title} style={{display: titleDisplay}} placeholder="Article Title" onChange={this.titleChange} /><br />
-          <MDE markdown={this.state.newArticle ? this.state.newContent : this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/>
+        <div className="newArticle">
+          <div className="newTitle"><Input value={title} style={{display: titleDisplay}} placeholder="Article Title" onChange={this.titleChange} /></div><br />
+          <div><MDE markdown={this.state.newArticle ? this.state.newContent : this.state.markdown.replace("↵","\n")} submitContent={this.submitContent}/></div>
         </div>
       )
     } else {
         if (!this.state.noArticle){
-          showEditsOrNot = this.state.moderator ? <Button size="small" inverted onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</Button> : null
+          showEditsOrNot = this.state.moderator ? <div><Button size="small" inverted onClick={() => this.setState({showEdits: !this.state.showEdits})}>{this.state.showEdits ? "View latest approved revision" : "View old revisions or approve new ones"}</Button></div> : null
         }
         edits = <div>
                   <Button size="tiny" attached="left" disabled={this.state.currentEditMods === 0} onClick={this.changeCurrentEdit}>{"< Earlier Revision"}</Button><Button size="tiny" attached="right" disabled={this.state.currentEditMods === this.state.allEdits.length - 1} onClick={this.changeCurrentEdit}>{"Later Revision >"}</Button><br />
@@ -204,12 +213,12 @@ class Article extends React.Component {
       <div className="contentWrapper">
         <div className="sidebarAndGame">
           <div className="gameWrapper">
-            <h1><a href={`${window.location.href.split("/").slice(0,5).join("/")}/home`}>{this.state.game.title}</a></h1>
+            <div className="titleWrapper"><h1><a href={`${window.location.href.split("/").slice(0,5).join("/")}/home`}>{this.state.game.title}</a></h1></div>
             <p>Released: {this.state.game.release_year}</p>
             {follow}
           </div>
           <div className="sidebarWrapper">
-            <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle}/>
+            <Sidebar info={{game: this.state.game, headings: this.state.headings, articles: this.state.articles}} addArticle={this.addArticle} editing={this.state.editing}/>
           </div>
         </div>
         <div className="main">

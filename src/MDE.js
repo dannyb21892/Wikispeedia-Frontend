@@ -1,6 +1,7 @@
 import * as React from "react";
 import ReactMde, {ReactMdeTypes} from "react-mde";
 import * as Showdown from "showdown";
+import { Button } from "semantic-ui-react"
 import 'react-mde/lib/styles/css/react-mde-all.css'
 
 export interface MDEState {
@@ -14,13 +15,12 @@ class MDE extends React.Component<{}, AppState> {
     constructor(props) {
         super(props);
         this.state = {
-            mdeState: {markdown: this.props.markdown || ""},
+            mdeState: {markdown: (this.props.newArticle ? "" : this.props.markdown)},
         };
         this.converter = new Showdown.Converter({tables: true, simplifiedAutoLink: true});
     }
 
     handleValueChange = (mdeState: ReactMdeTypes.MdeState) => {
-        console.log(mdeState)
         this.setState({mdeState});
     }
 
@@ -35,8 +35,8 @@ class MDE extends React.Component<{}, AppState> {
                     onChange={this.handleValueChange}
                     editorState={this.state.mdeState}
                     generateMarkdownPreview={(markdown) => Promise.resolve(this.converter.makeHtml(markdown))}
-                />
-                <button onClick={this.submitContent}>Submit</button>
+                /><br />
+                <Button inverted onClick={this.submitContent}>Submit</Button>
             </div>
         );
     }

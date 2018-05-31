@@ -56,12 +56,12 @@ class Sidebar extends React.Component {
           )
         }
       )
-      articles = [...articles, <div className={"article"+(this.state.expanded[i] ? " expanded" : "")}>
+      articles = [...articles, <div className={"article"+(this.state.expanded[i] ? " expanded" : "")+ " last"} style={{display: this.props.editing ? "none" : "auto"}}>
         <a className={"notSelected"} onClick={(e) => this.props.addArticle(e, this.props.info.headings[i])}>{"+ New Article"}</a>
       </div>]
 
       return  <div>
-                <div key={i} name={i} className={"navHeader"+headerType} onClick={(e) => this.expand(e,i)}>
+                <div key={i} name={i} className={"navHeader"+headerType+(this.state.expanded[i] ? " expanded" : "")} onClick={(e) => this.expand(e,i)}>
                   <h4 name={i}>{h.name}</h4>
                 </div>
                 {articles}
