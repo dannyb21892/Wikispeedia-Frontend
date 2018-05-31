@@ -110,7 +110,7 @@ class NavBar extends React.Component {
             <Feed.Label image={edit} />
             <Feed.Content>
               <Feed.Summary>
-                <a href={`${e.url}${e.edit.title.replace(/[!@#$%^&*()+={}|[\]\\;'"`~:<>?,./]/g,"").replace(/[-]/g,"_").replace(/\s/g,"_")}`}>{e.edit.title}</a>
+                <a href={`${e.url}`}>{e.edit.title}</a>
               </Feed.Summary>
             </Feed.Content>
           </Feed.Event>
@@ -154,6 +154,7 @@ class NavBar extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     let logInOrOut = this.props.loggedIn ? <li className="button"><a onClick={this.props.logout} className="button special">Log Out</a></li> : <li className="button special"><a onClick={this.props.showLogin} className="button special">Sign Up or Log In</a></li>
     let profile = this.props.loggedIn ? <li className="button"><a onClick={() => window.location.href = `http://localhost:3001/users/${localStorage.getItem("username")}`} className="button special">{localStorage.getItem("username")}</a></li> : null
     let results = Object.keys(this.state.results).length > 0 && !this.state.showNotifications ? this.searchResults() : null
@@ -179,9 +180,8 @@ class NavBar extends React.Component {
     )
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     if(this.props.loggedIn && !this.state.checkedNotifications){
-      console.log("fetching")
       fetch("http://localhost:3000/api/v1/users",{
         method: "POST",
         headers: {

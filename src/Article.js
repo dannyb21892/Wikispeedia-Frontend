@@ -104,6 +104,7 @@ class Article extends React.Component {
       },
       body: JSON.stringify({
         type: type,
+        home: this.props.match.params.article === "home"
       })
     })
     .then(response => response.json())
